@@ -5,7 +5,9 @@ import { NestExpressApplication } from '@nestjs/platform-express';
 import { join } from 'path';
 import  {Response} from './common/response';
 import { HttpFilter } from './common/http.filter'
+import { GlobalLogger } from './middleware/logger.middleware';
 import { ValidationPipe } from '@nestjs/common';
+import { RoleGuard } from './guard/role/role.guard';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
@@ -18,6 +20,9 @@ async function bootstrap() {
   // 全局中间件
   app.use(cors());
 
+  // 全局日志
+  app.use(GlobalLogger);
+
   // 全局异常拦截器
   app.useGlobalFilters(new HttpFilter());
 
@@ -26,6 +31,8 @@ async function bootstrap() {
 
   // 全局pipe validate
   app.useGlobalPipes(new ValidationPipe())
+
+  // app.useGlobalGuards(new RoleGuard())
 
   await app.listen(3000);
 }
