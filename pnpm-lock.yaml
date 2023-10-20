@@ -31,6 +31,7 @@ specifiers:
   rxjs: ^7.8.1
   source-map-support: ^0.5.21
   supertest: ^6.3.3
+  swagger-ui-express: ^5.0.0
   ts-jest: ^29.1.0
   ts-loader: ^9.4.3
   ts-node: ^10.9.1
@@ -50,6 +51,7 @@ dependencies:
   multer: 1.4.5-lts.1
   reflect-metadata: 0.1.13
   rxjs: 7.8.1
+  swagger-ui-express: 5.0.0
 
 devDependencies:
   '@nestjs/cli': 10.1.18
@@ -4937,6 +4939,15 @@ packages:
 
   /swagger-ui-dist/5.9.0:
     resolution: {integrity: sha512-NUHSYoe5XRTk/Are8jPJ6phzBh3l9l33nEyXosM17QInoV95/jng8+PuSGtbD407QoPf93MH3Bkh773OgesJpA==}
+    dev: false
+
+  /swagger-ui-express/5.0.0:
+    resolution: {integrity: sha512-tsU9tODVvhyfkNSvf03E6FAk+z+5cU3lXAzMy6Pv4av2Gt2xA0++fogwC4qo19XuFf6hdxevPuVCSKFuMHJhFA==}
+    engines: {node: '>= v0.10.32'}
+    peerDependencies:
+      express: '>=4.0.0 || >=5.0.0-beta'
+    dependencies:
+      swagger-ui-dist: 5.9.0
     dev: false
 
   /symbol-observable/4.0.0:

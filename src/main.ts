@@ -8,6 +8,7 @@ import { HttpFilter } from './common/http.filter'
 import { GlobalLogger } from './middleware/logger.middleware';
 import { ValidationPipe } from '@nestjs/common';
 import { RoleGuard } from './guard/role/role.guard';
+import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
@@ -33,6 +34,16 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe())
 
   // app.useGlobalGuards(new RoleGuard())
+
+  const options = new DocumentBuilder()
+    .setTitle('doc')
+    .setDescription('doc description')
+    .setVersion('1.0')
+    .addTag('1.0')
+    .build();
+  const document = SwaggerModule.createDocument(app, options);
+  SwaggerModule.setup('doc', app, document);
+  
 
   await app.listen(3000);
 }

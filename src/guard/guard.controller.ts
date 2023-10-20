@@ -4,8 +4,10 @@ import { CreateGuardDto } from './dto/create-guard.dto';
 import { UpdateGuardDto } from './dto/update-guard.dto';
 import { RoleGuard } from './role/role.guard';
 import { Role } from './role/role.decorator';
+import { ApiOperation, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
 
 @Controller('guard')
+@ApiTags('守卫接口')
 @UseGuards(RoleGuard)
 export class GuardController {
   constructor(private readonly guardService: GuardService) {}
@@ -16,6 +18,9 @@ export class GuardController {
   }
 
   @Get()
+  @ApiOperation({summary: '获取列表', description: 'description'})
+  @ApiParam({name: 'username', description: 'this username', required: false, type: String})
+  @ApiQuery({name: 'page', description: 'page number',})
   @Role('admin')
   findAll() {
     return this.guardService.findAll();
