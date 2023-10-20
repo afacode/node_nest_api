@@ -1,9 +1,11 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Req, Query } from '@nestjs/common';
 import { DemoService } from './demo.service';
-import { CreateDemoDto } from './dto/create-demo.dto';
+import { CreateDemoDto, QueryDto } from './dto/create-demo.dto';
 import { UpdateDemoDto } from './dto/update-demo.dto';
+import { ApiTags } from '@nestjs/swagger';
 
 @Controller('demo')
+@ApiTags('SQL demo  练习')
 export class DemoController {
   constructor(private readonly demoService: DemoService) {}
 
@@ -13,8 +15,9 @@ export class DemoController {
   }
 
   @Get()
-  findAll() {
-    return this.demoService.findAll();
+  findAll(@Query() query: QueryDto) {
+    
+    return this.demoService.findAll(query);
   }
 
   @Get(':id')

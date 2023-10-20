@@ -9,7 +9,6 @@ export class HttpFilter implements ExceptionFilter{
         const res =  ctx.getResponse<Response>()
 
         const status = exception.getStatus()
-        console.log(status, '=====', req.body)
 
         res.status(status).json({
             httpCode: status,
