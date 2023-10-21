@@ -9,9 +9,12 @@ import { GlobalLogger } from './middleware/logger.middleware';
 import { ValidationPipe } from '@nestjs/common';
 import { RoleGuard } from './guard/role/role.guard';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import { ConfigService } from '@nestjs/config';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
+
+  const config = app.get(ConfigService)
 
   // 静态资源访问
   app.useStaticAssets(join(__dirname,  'files'),  {
@@ -44,7 +47,9 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, options);
   SwaggerModule.setup('doc', app, document);
   
-
-  await app.listen(3000);
+  const PORT  = config.get<number>('SERVE_PORT', 3000);
+  await app.listen(PORT, () => {
+    console.log(`app listen port ${PORT}`, config)
+  });
 }
 bootstrap();

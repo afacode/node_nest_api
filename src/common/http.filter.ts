@@ -14,7 +14,7 @@ export class HttpFilter implements ExceptionFilter{
             httpCode: status,
             success:  false,
             time:  new Date().toISOString(),
-            data: exception.getResponse(),
+            data: exception?.getResponse() ? exception?.getResponse() : exception.message,
             status: -1,
             message: exception.message,
             path: req.url,

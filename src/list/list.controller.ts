@@ -6,7 +6,6 @@ import { UpdateListDto } from './dto/update-list.dto';
 @Controller('list')
 export class ListController {
   constructor(private readonly listService: ListService,
-    @Inject('Config') private readonly  base: any
     ) {}
 
   @Post()
@@ -16,7 +15,7 @@ export class ListController {
 
   @Get()
   findAll() {
-    return this.base;
+    return 1;
   }
 
   @Get(':id')
