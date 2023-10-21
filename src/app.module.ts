@@ -6,6 +6,8 @@ import { GuardModule } from './guard/guard.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { DemoModule } from './demo/demo.module';
 import { ConfigModule } from '@nestjs/config';
+import { AccountModule } from './api/account/account.module';
+import { LoginModule } from './api/login/login.module';
 import configuration from './config'
 
 // docker run -e MYSQL_ROOT_PASSWORD=123456 -p 330603306 -d mysql:8
@@ -30,7 +32,7 @@ import configuration from './config'
       retryDelay: 800, //	连接重试之间的延迟（毫秒）（默认值：3000）
       autoLoadEntities: true, //	如果是 true，将自动加载实体（默认值：false）
     }),
-    UserModule, ListModule, UploadModule, GuardModule, DemoModule],
+    UserModule, ListModule, UploadModule, GuardModule, DemoModule, AccountModule, LoginModule],
   controllers: [],
   providers: [],
 })
