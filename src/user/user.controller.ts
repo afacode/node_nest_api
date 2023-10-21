@@ -13,6 +13,13 @@ export class UserController {
     return createUserDto;
   }
 
+  @Post('signup')
+  createUser(@Body() createUserDto: CreateUserDto) {
+    console.log(createUserDto, 'body')
+    return this.userService.createUser(createUserDto);
+  }
+
+
   @Get()
   findAll() {
     return this.userService.findAll();

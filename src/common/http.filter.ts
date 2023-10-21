@@ -14,11 +14,10 @@ export class HttpFilter implements ExceptionFilter{
             httpCode: status,
             success:  false,
             time:  new Date().toISOString(),
-            data: null,
+            data: exception.getResponse(),
             status: -1,
             message: exception.message,
             path: req.url,
         })
-        return 
     };
 }

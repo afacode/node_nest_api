@@ -1,13 +1,21 @@
-import { IsString, IsInt, Length, IsNotEmpty } from 'class-validator';
+import { IsString, IsInt, Length, IsNotEmpty, IsMobilePhone, Matches, IsEmpty } from 'class-validator';
 
 export class CreateUserDto {
-    @IsNotEmpty()
     @IsString()
+    @IsNotEmpty()
     @Length(4, 12, {
         message: 'name length'
     })
     name: string;
 
-    @IsInt()
-    age: number
+    @IsString()
+    @IsNotEmpty()
+    password: string
+
+    @IsString()
+    @IsNotEmpty()
+    rePassword: string
+
+    @IsMobilePhone('zh-CN')
+    mobile: string
 }
