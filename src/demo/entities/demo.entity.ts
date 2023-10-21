@@ -1,4 +1,5 @@
-import { Column, CreateDateColumn, Entity, Generated, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, Generated, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Tags } from "./tags.entity";
 
 @Entity()
 export class Demo {
@@ -27,6 +28,9 @@ export class Demo {
 
     @Column({type: 'simple-json', nullable:  true})
     json: {address: string, age:  number}
+
+    @OneToMany(()  =>  Tags,  (tags) => tags.user)
+    tags: Tags[]
 }
 
 //  https://typeorm.nodejs.cn/find-options
