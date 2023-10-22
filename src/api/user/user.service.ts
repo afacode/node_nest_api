@@ -6,8 +6,10 @@ import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
 import { hash, compare } from 'bcrypt';
 import { ConfigService } from '@nestjs/config';
-import { RegisterUserDto } from './dto/index.dto';
+import { RegisterUserDto, UserLoginDto } from './dto/index.dto';
 import { RedisService } from 'src/plugins/redis/redis.service';
+import { Role } from './entities/role.entity';
+import { Permission } from './entities/permission.entity';
 
 @Injectable()
 export class UserService {
@@ -18,6 +20,8 @@ export class UserService {
   
   constructor(
     @InjectRepository(User)  private readonly user: Repository<User>,
+    @InjectRepository(Role)  private readonly roleRepository: Repository<Role>,
+    @InjectRepository(Permission)  private readonly permissionRepository: Repository<Permission>,
     private configService: ConfigService
   ) {}
 
@@ -56,9 +60,27 @@ export class UserService {
     }
   }
 
+  async userLogin(loginUser: UserLoginDto, isAdmin: boolean) {
+    const findOne  = await this.user.findOne({
+      where:  {username:  loginUser.username, isAdmin: isAdmin},
+      relations: ['roles'],
+    })
+
+    if (!findOne) {
+      throw new HttpException('用户不存在', HttpStatus.BAD_REQUEST)
+    }
+
+    const isPass = await this.comparePassword(loginUser.password, findOne.password)
+    if (!isPass) {
+      throw new HttpException('密码不正确', HttpStatus.BAD_REQUEST)
+    }
+
+    return findOne
+  }
+
   async setRedis() {
-     await this.redisService.set('test_key1', +new Date())
-     return 'set sucess'
+    //  await this.redisService.set('test_key1', +new Date())
+     return 'ssss'
   }
 
   create(createUserDto: CreateUserDto) {
@@ -74,8 +96,8 @@ export class UserService {
     return await hash(password, 10);
   }
 
-  private async comparePassword(password: string, user:  User) {
-    return  await compare(password,  user.password)
+  private async comparePassword(password: string, sqlPassword: string) {
+    return  await compare(password,  sqlPassword)
   }
 
   async createUser(createUserDto: CreateUserDto) {

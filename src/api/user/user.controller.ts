@@ -2,7 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { RegisterUserDto } from './dto/index.dto';
+import { RegisterUserDto, UserLoginDto } from './dto/index.dto';
 import { ApiTags } from '@nestjs/swagger';
 
 @ApiTags('用户组')
@@ -11,9 +11,15 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Post('register')
-  register(@Body() registerUser: RegisterUserDto) {
-    return this.userService.register(registerUser)
+  async register(@Body() registerUser: RegisterUserDto) {
+    return await this.userService.register(registerUser)
   }
+
+  @Post('login')
+  async userLogin(@Body()  loginUser: UserLoginDto) {
+    return await this.userService.userLogin(loginUser, false)
+  }
+  
 
   @Post()
   create(@Body() createUserDto: CreateUserDto) {

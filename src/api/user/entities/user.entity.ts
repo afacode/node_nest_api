@@ -7,16 +7,13 @@ import { Role } from "./role.entity";
     name: 'users'
 })
 export class User  extends  BaseModelWithUUIDPrimary{
-    @Column({nullable: true})
-    name: string
-
     @Column({name: 'nick_name', nullable: true})
     nikeName: string
 
     @Column({length: 50, comment:'用户名'})
     username: string
 
-    @Column({select: false})
+    @Column({select: true})
     password: string
 
     @Column()
