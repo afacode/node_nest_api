@@ -1,4 +1,4 @@
-import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn, Relation, UpdateDateColumn } from "typeorm";
 import { Demo } from "./demo.entity";
 
 @Entity()
@@ -16,6 +16,10 @@ export class Tags {
     updateTime: Date
 
     @ManyToOne(() => Demo, (user)  => user.tags)
-    @JoinColumn()
+    @JoinColumn({name: 'user_id'})
     user: Demo
+
+    @OneToOne(() =>  Demo, (demo) => demo.test)
+    @JoinColumn({name:  'test_id'})
+    test: Relation<Demo>
 }
