@@ -1,7 +1,8 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, UseGuards } from '@nestjs/common';
 import { UserService } from './user.service';
 import { RegisterUserDto, UserLoginDto } from './dto/index.dto';
 import { ApiTags } from '@nestjs/swagger';
+import { LoginGuard } from 'src/guard/login.guard';
 
 @ApiTags('用户组')
 @Controller('user')
@@ -34,8 +35,10 @@ export class UserController {
   }
 
   @Get()
+  @UseGuards(LoginGuard)
   setRedis() {
-    return this.userService.setRedis();
+    return 1
+    // return this.userService.setRedis();
   }
   
 }
