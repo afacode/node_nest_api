@@ -1,7 +1,5 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { UserService } from './user.service';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
 import { RegisterUserDto, UserLoginDto } from './dto/index.dto';
 import { ApiTags } from '@nestjs/swagger';
 
@@ -19,37 +17,25 @@ export class UserController {
   async userLogin(@Body()  loginUser: UserLoginDto) {
     return await this.userService.userLogin(loginUser, false)
   }
-  
 
-  @Post()
-  create(@Body() createUserDto: CreateUserDto) {
-    console.log(createUserDto)
-    return createUserDto;
+  @Get('refresh')
+  async refresh(@Query('refreshToken') refreshToken: string) {
+    return await this.userService.refresh(refreshToken, false)
   }
 
-  @Post('signup')
-  createUser(@Body() createUserDto: CreateUserDto) {
-    console.log(createUserDto, 'body')
-    return this.userService.createUser(createUserDto);
+  @Post('/admin/login')
+  async adminLogin(@Body()  loginUser: UserLoginDto) {
+    return await this.userService.userLogin(loginUser, true)
+  }
+
+  @Get('/admin/refresh')
+  async adminRefresh(@Query('refreshToken') refreshToken: string) {
+    return await this.userService.refresh(refreshToken, true)
   }
 
   @Get()
   setRedis() {
     return this.userService.setRedis();
   }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.userService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.userService.update(+id, updateUserDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.userService.remove(+id);
-  }
+  
 }

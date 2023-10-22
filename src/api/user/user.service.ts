@@ -1,6 +1,4 @@
 import { HttpException, HttpStatus, Inject, Injectable, Logger } from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
@@ -10,6 +8,7 @@ import { RegisterUserDto, UserLoginDto } from './dto/index.dto';
 import { RedisService } from 'src/plugins/redis/redis.service';
 import { Role } from './entities/role.entity';
 import { Permission } from './entities/permission.entity';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class UserService {
@@ -17,6 +16,9 @@ export class UserService {
 
   @Inject(RedisService)
   redisService: RedisService
+
+  @Inject(JwtService)
+  jwtService: JwtService
   
   constructor(
     @InjectRepository(User)  private readonly user: Repository<User>,
@@ -63,7 +65,7 @@ export class UserService {
   async userLogin(loginUser: UserLoginDto, isAdmin: boolean) {
     const findOne  = await this.user.findOne({
       where:  {username:  loginUser.username, isAdmin: isAdmin},
-      relations: ['roles'],
+      relations: ['roles', 'roles.permissions'],
     })
 
     if (!findOne) {
@@ -75,21 +77,51 @@ export class UserService {
       throw new HttpException('密码不正确', HttpStatus.BAD_REQUEST)
     }
 
-    return findOne
+    const accessToken = this.getToken(findOne)
+
+    const refreshToken = this.jwtService.sign({
+      userId:  findOne.id,
+    }, {
+       expiresIn: '7d'
+    })
+
+    return {...findOne, accessToken, refreshToken}
+  }
+
+  getToken(user: User) {
+    return this.jwtService.sign({
+      userId:  user.id,
+      username: user.username,
+      roles:  user.roles,
+    }, {
+       expiresIn: '30m'
+    })
+  }
+
+  async refresh(token: string, isAdmin: boolean){
+    const data = this.jwtService.verify(token)
+    console.log(data)
+    const user =  await this.findUserById(data.userId, isAdmin)
+    const accessToken = this.getToken(user)
+    const refreshToken = this.jwtService.sign({
+      userId:  user.id,
+    }, {
+       expiresIn: '7d'
+    })
+    return {accessToken, refreshToken}
+  }
+
+  async findUserById(userId: string, isAdmin: boolean) {
+    const user = await this.user.findOne({where: {
+      id: userId,
+      isAdmin:  isAdmin
+    }})
+    return user
   }
 
   async setRedis() {
     //  await this.redisService.set('test_key1', +new Date())
      return 'ssss'
-  }
-
-  create(createUserDto: CreateUserDto) {
-    return '----';
-  }
-
-  findAll() {
-    console.log(this.configService.get<string>('DB_PORT'))
-    return this.user.find();
   }
 
   private async getPasswordhash(password: string): Promise<string> {
@@ -98,28 +130,5 @@ export class UserService {
 
   private async comparePassword(password: string, sqlPassword: string) {
     return  await compare(password,  sqlPassword)
-  }
-
-  async createUser(createUserDto: CreateUserDto) {
-    const hash = await this.getPasswordhash(createUserDto.password)
-
-    const res  = await this.user.save({
-      name: createUserDto.name,
-      phoneNumber: createUserDto.phoneNumber,
-      password: hash
-    })
-    return  {id: res.id}
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
-  }
-
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} user`;
   }
 }

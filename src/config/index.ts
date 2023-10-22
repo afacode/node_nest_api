@@ -5,6 +5,7 @@ export default () => ({
       port: parseInt(process.env.DB_PORT, 10) || 3306
     },
     TEST_ENV: process.env.TEST_ENV,
+    jwtSecret: process.env.JWT_SECRET
   });
 
   export const getEnv = () => {

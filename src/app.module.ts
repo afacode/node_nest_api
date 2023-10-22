@@ -3,11 +3,12 @@ import { UserModule } from './api/user/user.module';
 import { UploadModule } from './plugins/upload/upload.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { DemoModule } from './demo/demo.module';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AccountModule } from './api/account/account.module';
 import { LoginModule } from './api/login/login.module';
 import { RedisModule } from './plugins/redis/redis.module';
 import configuration from './config'
+import { JwtModule } from '@nestjs/jwt';
 
 // docker run -e MYSQL_ROOT_PASSWORD=123456 -p 330603306 -d mysql:8
 @Module({
@@ -30,6 +31,18 @@ import configuration from './config'
       retryAttempts: 10, //	尝试连接数据库的次数（默认值：10）
       retryDelay: 800, //	连接重试之间的延迟（毫秒）（默认值：3000）
       autoLoadEntities: true, //	如果是 true，将自动加载实体（默认值：false）
+    }),
+    JwtModule.registerAsync({
+      global:  true,
+      useFactory(configService: ConfigService) {
+        return {
+          secret: configService.get('jwtSecret'),
+          signOptions: {
+            expiresIn: '30m', // 30 min
+          }
+        }
+      },
+      inject: [ConfigService]
     }),
     UserModule, UploadModule, AccountModule, LoginModule, RedisModule],
   controllers: [],
