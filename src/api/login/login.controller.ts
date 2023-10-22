@@ -2,7 +2,9 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { LoginService } from './login.service';
 import { CreateLoginDto } from './dto/create-login.dto';
 import { UpdateLoginDto } from './dto/update-login.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('login组')
 @Controller('login')
 export class LoginController {
   constructor(private readonly loginService: LoginService) {}

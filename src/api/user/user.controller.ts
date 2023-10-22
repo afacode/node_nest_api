@@ -2,10 +2,18 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { RegisterUserDto } from './dto/index.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('用户组')
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
+
+  @Post('register')
+  register(@Body() registerUser: RegisterUserDto) {
+    return this.userService.register(registerUser)
+  }
 
   @Post()
   create(@Body() createUserDto: CreateUserDto) {
@@ -19,10 +27,9 @@ export class UserController {
     return this.userService.createUser(createUserDto);
   }
 
-
   @Get()
-  findAll() {
-    return this.userService.findAll();
+  setRedis() {
+    return this.userService.setRedis();
   }
 
   @Get(':id')

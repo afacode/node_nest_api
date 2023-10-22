@@ -17,5 +17,5 @@ export class CreateUserDto {
     rePassword: string
 
     @IsMobilePhone('zh-CN')
-    mobile: string
+    phoneNumber: string
 }

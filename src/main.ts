@@ -7,7 +7,6 @@ import  {Response} from './common/response';
 import { HttpFilter } from './common/http.filter'
 import { GlobalLogger } from './middleware/logger.middleware';
 import { ValidationPipe } from '@nestjs/common';
-import { RoleGuard } from './guard/role/role.guard';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { ConfigService } from '@nestjs/config';
 
