@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Inject, Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { hash, compare } from 'bcrypt';
 import { ConfigService } from '@nestjs/config';
 import { RegisterUserDto, UserLoginDto } from './dto/index.dto';
@@ -94,7 +94,7 @@ export class UserService {
       username: user.username,
       roles:  user.roles,
     }, {
-       expiresIn: '30m'
+       expiresIn: '1d'
     })
   }
 
@@ -130,5 +130,20 @@ export class UserService {
 
   private async comparePassword(password: string, sqlPassword: string) {
     return  await compare(password,  sqlPassword)
+  }
+
+  async findRoleById(ids:  string[]) {
+    console.log(ids)
+    
+    // const roles = await this.roleRepository.findOne({where: {id:  ids[0]},
+    //   relations: ['permissions']})
+   
+    const roles = await this.roleRepository.find({
+      where: {
+        id: In(ids),
+      },
+      relations: ['permissions']
+    })
+    return roles
   }
 }

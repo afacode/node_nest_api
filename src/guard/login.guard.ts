@@ -2,24 +2,37 @@ import { CanActivate, ExecutionContext, Inject, Injectable, UnauthorizedExceptio
 import { Observable } from 'rxjs';
 import { Request } from 'express';
 import { JwtService } from '@nestjs/jwt';
+import { Reflector } from '@nestjs/core';
 
 @Injectable()
 export class LoginGuard implements CanActivate {
     @Inject(JwtService)
     private jwtService: JwtService
 
+    @Inject(Reflector)
+    private reflector: Reflector
+
     async canActivate(
         context: ExecutionContext,
     ): Promise<boolean> {
+
+        const isPublic = this.reflector.getAllAndOverride<boolean>('IS_PUBLIC_URL', [
+            context.getHandler(),
+            context.getClass(),
+        ]);
+        if (isPublic) {
+            return true
+        }
+
         const request: Request = context.switchToHttp().getRequest();
         const authorization = request.header('authorization') || '';
         const bearer = authorization.split(' ');
-        console.log(bearer, 'bearer')
+        console.log(authorization, 'authorization')
 
-        if (!bearer || bearer.length < 2) {
+        if (!bearer || bearer.length < 1) {
             throw new UnauthorizedException('登录token错误');
         }
-        const token = bearer[1];
+        const token = bearer[0];
         try {
             const info = await this.jwtService.verifyAsync(token);
             // const payload = await this.jwtService.verifyAsync(
@@ -28,7 +41,7 @@ export class LoginGuard implements CanActivate {
             //       secret: jwtConstants.secret
             //     }
             //   );
-            (request as any).user = info.user;
+            (request as any).user = info;
             console.log(info, 'LoginGuard')
             return true;
         } catch (e) {

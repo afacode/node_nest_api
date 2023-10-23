@@ -9,6 +9,9 @@ import { LoginModule } from './api/login/login.module';
 import { RedisModule } from './plugins/redis/redis.module';
 import configuration from './config'
 import { JwtModule } from '@nestjs/jwt';
+import { APP_GUARD } from '@nestjs/core';
+import { LoginGuard } from './guard/login.guard';
+import { PermissionGuard } from './guard/permission.guard';
 
 // docker run -e MYSQL_ROOT_PASSWORD=123456 -p 330603306 -d mysql:8
 @Module({
@@ -38,7 +41,7 @@ import { JwtModule } from '@nestjs/jwt';
         return {
           secret: configService.get('jwtSecret'),
           signOptions: {
-            expiresIn: '30m', // 30 min
+            expiresIn: '1d', // 30 min
           }
         }
       },
@@ -46,6 +49,15 @@ import { JwtModule } from '@nestjs/jwt';
     }),
     UserModule, UploadModule, AccountModule, LoginModule, RedisModule],
   controllers: [],
-  providers: [],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: LoginGuard, //  全局启用身份验证 配合白名单
+    },
+    {
+      provide: APP_GUARD,
+      useClass: PermissionGuard, //  全局启用身份验证 配合白名单
+    }
+  ],
 })
 export class AppModule { }
