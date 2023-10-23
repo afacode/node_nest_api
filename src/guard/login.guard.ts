@@ -8,9 +8,9 @@ export class LoginGuard implements CanActivate {
     @Inject(JwtService)
     private jwtService: JwtService
 
-    canActivate(
+    async canActivate(
         context: ExecutionContext,
-    ): boolean | Promise<boolean> | Observable<boolean> {
+    ): Promise<boolean> {
         const request: Request = context.switchToHttp().getRequest();
         const authorization = request.header('authorization') || '';
         const bearer = authorization.split(' ');
@@ -21,7 +21,13 @@ export class LoginGuard implements CanActivate {
         }
         const token = bearer[1];
         try {
-            const info = this.jwtService.verify(token);
+            const info = await this.jwtService.verifyAsync(token);
+            // const payload = await this.jwtService.verifyAsync(
+            //     token,
+            //     {
+            //       secret: jwtConstants.secret
+            //     }
+            //   );
             (request as any).user = info.user;
             console.log(info, 'LoginGuard')
             return true;

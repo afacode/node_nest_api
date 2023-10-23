@@ -3,13 +3,12 @@ import { AppModule } from './app.module';
 import * as cors from 'cors';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { join } from 'path';
-import  {Response} from './common/response';
+import  {ResponseInterceptor} from './common/response.interceptor';
 import { HttpFilter } from './common/http.filter'
 import { GlobalLogger } from './middleware/logger.middleware';
 import { ValidationPipe } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { ConfigService } from '@nestjs/config';
-import { RequestInterceptor } from './common/reuest.interceptor';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
@@ -31,8 +30,7 @@ async function bootstrap() {
   app.useGlobalFilters(new HttpFilter());
 
   // 全局响应拦截器
-  app.useGlobalInterceptors(new RequestInterceptor());
-  app.useGlobalInterceptors(new Response());
+  app.useGlobalInterceptors(new ResponseInterceptor());
 
   // 全局pipe validate
   app.useGlobalPipes(new ValidationPipe())
