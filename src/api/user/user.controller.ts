@@ -35,7 +35,7 @@ export class UserController {
   }
 
   @Get()
-  @UseGuards(LoginGuard)
+  // @UseGuards(LoginGuard)
   setRedis() {
     return 1
     // return this.userService.setRedis();

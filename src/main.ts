@@ -9,6 +9,7 @@ import { GlobalLogger } from './middleware/logger.middleware';
 import { ValidationPipe } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { ConfigService } from '@nestjs/config';
+import { RequestInterceptor } from './common/reuest.interceptor';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
@@ -30,6 +31,7 @@ async function bootstrap() {
   app.useGlobalFilters(new HttpFilter());
 
   // 全局响应拦截器
+  app.useGlobalInterceptors(new RequestInterceptor());
   app.useGlobalInterceptors(new Response());
 
   // 全局pipe validate
