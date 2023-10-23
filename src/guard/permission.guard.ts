@@ -28,9 +28,6 @@ export class PermissionGuard implements CanActivate {
         const roles = await this.userService.findRoleById(
             request['user'].roles.map(item  => item.id)
         )
-        roles.forEach(item => {
-            console.log(item.name, item.permissions, '99999')
-        })
 
         const permissions = roles.reduce((total, current) => {
             total.push(...current.permissions)
@@ -44,7 +41,6 @@ export class PermissionGuard implements CanActivate {
         const isPremissPass = permissions.some(item => {
            return item.code === requirePremission[0]
         })
-        console.log(requirePremission, 'requirePremission')
         if (isPremissPass || requirePremission == undefined) {
             return  true
         } else {

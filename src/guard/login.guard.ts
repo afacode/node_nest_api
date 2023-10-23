@@ -34,15 +34,14 @@ export class LoginGuard implements CanActivate {
         }
         const token = bearer[0];
         try {
-            const info = await this.jwtService.verifyAsync(token);
+            const user = await this.jwtService.verifyAsync(token);
             // const payload = await this.jwtService.verifyAsync(
             //     token,
             //     {
             //       secret: jwtConstants.secret
             //     }
             //   );
-            (request as any).user = info;
-            console.log(info, 'LoginGuard')
+            (request as any).user = user;
             return true;
         } catch (e) {
             throw new UnauthorizedException('登录 token 失效，请重新登录');

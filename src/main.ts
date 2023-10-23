@@ -5,7 +5,7 @@ import { NestExpressApplication } from '@nestjs/platform-express';
 import { join } from 'path';
 import  {ResponseInterceptor} from './common/response.interceptor';
 import { HttpFilter } from './common/http.filter'
-import { GlobalLogger } from './middleware/logger.middleware';
+import { LoggerMiddleware } from './middleware/logger.middleware';
 import { ValidationPipe } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { ConfigService } from '@nestjs/config';
@@ -22,15 +22,6 @@ async function bootstrap() {
   
   // 全局中间件
   app.use(cors());
-
-  // 全局日志
-  app.use(GlobalLogger);
-
-  // 全局异常拦截器
-  app.useGlobalFilters(new HttpFilter());
-
-  // 全局响应拦截器
-  app.useGlobalInterceptors(new ResponseInterceptor());
 
   // 全局pipe validate
   app.useGlobalPipes(new ValidationPipe())

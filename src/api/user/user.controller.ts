@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, UseGuards, BadRequestException, HttpStatus, HttpException } from '@nestjs/common';
 import { UserService } from './user.service';
 import { RegisterUserDto, UserLoginDto } from './dto/index.dto';
 import { ApiTags } from '@nestjs/swagger';
@@ -42,7 +42,7 @@ export class UserController {
   @Get()
   @IsPression('aaa')
   setRedis() {
-    return 1
+    return new HttpException('111', HttpStatus.EXPECTATION_FAILED)
     // return this.userService.setRedis();
   }
   
