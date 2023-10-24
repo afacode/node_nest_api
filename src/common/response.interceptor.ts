@@ -32,6 +32,7 @@ export class ResponseInterceptor<T> implements NestInterceptor{
                 responseData: data,
                 req: getFormatRequestInfo(req),
               });
+            // new ResultData('用户名被占用', createUserDto, false);
             return {
                 data,
                 status: 0,
@@ -40,5 +41,18 @@ export class ResponseInterceptor<T> implements NestInterceptor{
                 success: true,
             }
         }))
+    }
+}
+
+export class ResponseData {
+    public status: number;
+    public message: string;
+    public data: any;
+    public success: boolean;
+    constructor(messageType: any, data = null, success = true) {
+        this.status = 0;
+        this.message = messageType;
+        this.data = data;
+        this.success = success;
     }
 }

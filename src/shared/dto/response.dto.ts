@@ -9,3 +9,6 @@ export class Pagination {
 export class PaginationResponseDto<T> extends Pagination {
     list: Array<T>
 }
+
+export class ResultData  {
+}
