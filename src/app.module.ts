@@ -1,25 +1,25 @@
-import { MiddlewareConsumer, Module, RequestMethod } from '@nestjs/common';
-import { UserModule } from './api/user/user.module';
-import { UploadModule } from './plugins/upload/upload.module';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { ConfigModule, ConfigService } from '@nestjs/config';
-import { AccountModule } from './api/account/account.module';
-import { LoginModule } from './api/login/login.module';
-import { RedisModule } from './plugins/redis/redis.module';
+import { MiddlewareConsumer, Module, RequestMethod } from '@nestjs/common'
+import { UserModule } from './api/user/user.module'
+import { UploadModule } from './plugins/upload/upload.module'
+import { TypeOrmModule } from '@nestjs/typeorm'
+import { ConfigModule, ConfigService } from '@nestjs/config'
+import { AccountModule } from './api/account/account.module'
+import { LoginModule } from './api/login/login.module'
+import { RedisModule } from './plugins/redis/redis.module'
 import configuration from './config'
-import { JwtModule } from '@nestjs/jwt';
-import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
-import { LoginGuard } from './guard/login.guard';
-import { PermissionGuard } from './guard/permission.guard';
-import * as winston from 'winston';
+import { JwtModule } from '@nestjs/jwt'
+import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core'
+import { LoginGuard } from './guard/login.guard'
+import { PermissionGuard } from './guard/permission.guard'
+import * as winston from 'winston'
 // import 'winston-daily-rotate-file';
-import DailyRotateFile = require("winston-daily-rotate-file");
-import { WinstonModule, utilities } from 'nest-winston';
-import { LoggerMiddleware } from './middleware/logger.middleware';
-import { ResponseInterceptor } from './common/response.interceptor';
-import { HttpFilter } from './common/http.filter';
-import { WsGateway } from './ws/ws.gateway';
-import { GatewayModule } from './ws/gateway.module';
+import DailyRotateFile = require('winston-daily-rotate-file')
+import { WinstonModule, utilities } from 'nest-winston'
+import { LoggerMiddleware } from './middleware/logger.middleware'
+import { ResponseInterceptor } from './common/response.interceptor'
+import { HttpFilter } from './common/http.filter'
+import { WsGateway } from './ws/ws.gateway'
+import { GatewayModule } from './ws/gateway.module'
 
 // docker run -e MYSQL_ROOT_PASSWORD=123456 -p 330603306 -d mysql:8
 @Module({
@@ -28,7 +28,7 @@ import { GatewayModule } from './ws/gateway.module';
     ConfigModule.forRoot({
       envFilePath: ['.env.development'],
       isGlobal: true,
-      load: [configuration]
+      load: [configuration],
     }),
     TypeOrmModule.forRoot({
       type: 'mysql',
@@ -44,16 +44,16 @@ import { GatewayModule } from './ws/gateway.module';
       autoLoadEntities: true, //	如果是 true，将自动加载实体（默认值：false）
     }),
     JwtModule.registerAsync({
-      global:  true,
+      global: true,
       useFactory(configService: ConfigService) {
         return {
           secret: configService.get('jwtSecret'),
           signOptions: {
             expiresIn: '1d', // 30 min
-          }
+          },
         }
       },
-      inject: [ConfigService]
+      inject: [ConfigService],
     }),
     WinstonModule.forRoot({
       transports: [
@@ -63,12 +63,12 @@ import { GatewayModule } from './ws/gateway.module';
         // }),
         new winston.transports.Console({
           format: winston.format.combine(
-              winston.format.timestamp(),
-              winston.format.ms(),
-              utilities.format.nestLike(),
+            winston.format.timestamp(),
+            winston.format.ms(),
+            utilities.format.nestLike(),
           ),
           // silent: process.env.NODE_ENV === 'production'
-      }),
+        }),
         new DailyRotateFile({
           dirname: `logs`, // 日志保存的目录
           filename: '%DATE%.log', // 日志名称，占位符 %DATE% 取值为 datePattern 值。
@@ -78,14 +78,18 @@ import { GatewayModule } from './ws/gateway.module';
           // 记录时添加时间戳信息
           format: winston.format.combine(
             winston.format.timestamp({
-            	format: 'YYYY-MM-DD HH:mm:ss',
+              format: 'YYYY-MM-DD HH:mm:ss',
             }),
             winston.format.json(),
           ),
         }),
-      ]
+      ],
     }),
-    UserModule, UploadModule, AccountModule, LoginModule, RedisModule,
+    UserModule,
+    UploadModule,
+    AccountModule,
+    LoginModule,
+    RedisModule,
     GatewayModule,
   ],
   controllers: [],
@@ -100,7 +104,7 @@ import { GatewayModule } from './ws/gateway.module';
     },
     {
       provide: APP_FILTER,
-      useClass: HttpFilter,//全局异常拦截器
+      useClass: HttpFilter, //全局异常拦截器
     },
     {
       provide: APP_INTERCEPTOR,
@@ -109,11 +113,9 @@ import { GatewayModule } from './ws/gateway.module';
     // WsGateway
   ],
 })
-export class AppModule { 
+export class AppModule {
   configure(consumer: MiddlewareConsumer) {
     // 全局logger
-    consumer
-      .apply(LoggerMiddleware)
-      .forRoutes({path: '*', method: RequestMethod.ALL});
+    consumer.apply(LoggerMiddleware).forRoutes({ path: '*', method: RequestMethod.ALL })
   }
 }

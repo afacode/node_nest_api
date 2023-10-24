@@ -1,14 +1,14 @@
-import { HttpException, HttpStatus, Inject, Injectable, Logger } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { User } from './entities/user.entity';
-import { In, Repository } from 'typeorm';
-import { hash, compare } from 'bcrypt';
-import { ConfigService } from '@nestjs/config';
-import { RegisterUserDto, UserLoginDto } from './dto/index.dto';
-import { RedisService } from 'src/plugins/redis/redis.service';
-import { Role } from './entities/role.entity';
-import { Permission } from './entities/permission.entity';
-import { JwtService } from '@nestjs/jwt';
+import { HttpException, HttpStatus, Inject, Injectable, Logger } from '@nestjs/common'
+import { InjectRepository } from '@nestjs/typeorm'
+import { User } from './entities/user.entity'
+import { In, Repository } from 'typeorm'
+import { hash, compare } from 'bcrypt'
+import { ConfigService } from '@nestjs/config'
+import { RegisterUserDto, UserLoginDto } from './dto/index.dto'
+import { RedisService } from 'src/plugins/redis/redis.service'
+import { Role } from './entities/role.entity'
+import { Permission } from './entities/permission.entity'
+import { JwtService } from '@nestjs/jwt'
 
 @Injectable()
 export class UserService {
@@ -19,18 +19,17 @@ export class UserService {
 
   @Inject(JwtService)
   jwtService: JwtService
-  
+
   constructor(
-    @InjectRepository(User)  private readonly user: Repository<User>,
-    @InjectRepository(Role)  private readonly roleRepository: Repository<Role>,
-    @InjectRepository(Permission)  private readonly permissionRepository: Repository<Permission>,
-    private configService: ConfigService
+    @InjectRepository(User) private readonly user: Repository<User>,
+    @InjectRepository(Role) private readonly roleRepository: Repository<Role>,
+    @InjectRepository(Permission) private readonly permissionRepository: Repository<Permission>,
+    private configService: ConfigService,
   ) {}
 
-
   async register(registerUser: RegisterUserDto) {
-    console.log(registerUser,  'registerUser')
-    const captcha  = await this.redisService.get(`captcha_${registerUser.email}`)
+    console.log(registerUser, 'registerUser')
+    const captcha = await this.redisService.get(`captcha_${registerUser.email}`)
 
     if (!captcha) {
       throw new HttpException('验证码已失效', HttpStatus.BAD_REQUEST)
@@ -40,7 +39,7 @@ export class UserService {
       throw new HttpException('验证码不正确', HttpStatus.BAD_REQUEST)
     }
 
-    const u = await this.user.findOneBy({username: registerUser.username})
+    const u = await this.user.findOneBy({ username: registerUser.username })
 
     if (u) {
       throw new HttpException('用户已存在', HttpStatus.BAD_REQUEST)
@@ -63,8 +62,8 @@ export class UserService {
   }
 
   async userLogin(loginUser: UserLoginDto, isAdmin: boolean) {
-    const findOne  = await this.user.findOne({
-      where:  {username:  loginUser.username, isAdmin: isAdmin},
+    const findOne = await this.user.findOne({
+      where: { username: loginUser.username, isAdmin: isAdmin },
       relations: ['roles', 'roles.permissions'],
     })
 
@@ -79,70 +78,81 @@ export class UserService {
 
     const accessToken = this.getToken(findOne)
 
-    const refreshToken = this.jwtService.sign({
-      userId:  findOne.id,
-    }, {
-       expiresIn: '7d'
-    })
+    const refreshToken = this.jwtService.sign(
+      {
+        userId: findOne.id,
+      },
+      {
+        expiresIn: '7d',
+      },
+    )
 
-    return {...findOne, accessToken, refreshToken}
+    return { ...findOne, accessToken, refreshToken }
   }
 
   getToken(user: User) {
-    return this.jwtService.sign({
-      userId:  user.id,
-      username: user.username,
-      roles:  user.roles,
-    }, {
-       expiresIn: '1d'
-    })
+    return this.jwtService.sign(
+      {
+        userId: user.id,
+        username: user.username,
+        roles: user.roles,
+      },
+      {
+        expiresIn: '1d',
+      },
+    )
   }
 
-  async refresh(token: string, isAdmin: boolean){
+  async refresh(token: string, isAdmin: boolean) {
     const data = this.jwtService.verify(token)
     console.log(data)
-    const user =  await this.findUserById(data.userId, isAdmin)
+    const user = await this.findUserById(data.userId, isAdmin)
     const accessToken = this.getToken(user)
-    const refreshToken = this.jwtService.sign({
-      userId:  user.id,
-    }, {
-       expiresIn: '7d'
-    })
-    return {accessToken, refreshToken}
+    const refreshToken = this.jwtService.sign(
+      {
+        userId: user.id,
+      },
+      {
+        expiresIn: '7d',
+      },
+    )
+    return { accessToken, refreshToken }
   }
 
   async findUserById(userId: string, isAdmin: boolean) {
-    const user = await this.user.findOne({where: {
-      id: userId,
-      isAdmin:  isAdmin
-    }})
+    const user = await this.user.findOne({
+      where: {
+        id: userId,
+        isAdmin: isAdmin,
+      },
+    })
     return user
   }
 
   async setRedis() {
     //  await this.redisService.set('test_key1', +new Date())
-     return 'ssss'
+    return 'ssss'
   }
 
   private async getPasswordhash(password: string): Promise<string> {
-    return await hash(password, 10);
+    return await hash(password, 10)
   }
 
   private async comparePassword(password: string, sqlPassword: string) {
-    return  await compare(password,  sqlPassword)
+    return await compare(password, sqlPassword)
   }
 
-  async findRoleById(ids:  string[]) {
+  async findRoleById(ids: string[]) {
     console.log(ids)
-    
+
     // const roles = await this.roleRepository.findOne({where: {id:  ids[0]},
     //   relations: ['permissions']})
-   
+
     const roles = await this.roleRepository.find({
       where: {
         id: In(ids),
       },
-      relations: ['permissions']
+      relations: ['permissions'],
     })
     return roles
   }

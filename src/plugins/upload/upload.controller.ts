@@ -1,12 +1,23 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UploadedFile, UseInterceptors, Res } from '@nestjs/common';
-import { UploadService } from './upload.service';
-import { CreateUploadDto } from './dto/create-upload.dto';
-import { UpdateUploadDto } from './dto/update-upload.dto';
-import { FileInterceptor } from '@nestjs/platform-express';
-import {zip }from 'compressing';
-import { join } from 'path';
-import type {Response} from  'express'
-import { ApiTags } from '@nestjs/swagger';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  UploadedFile,
+  UseInterceptors,
+  Res,
+} from '@nestjs/common'
+import { UploadService } from './upload.service'
+import { CreateUploadDto } from './dto/create-upload.dto'
+import { UpdateUploadDto } from './dto/update-upload.dto'
+import { FileInterceptor } from '@nestjs/platform-express'
+import { zip } from 'compressing'
+import { join } from 'path'
+import type { Response } from 'express'
+import { ApiTags } from '@nestjs/swagger'
 
 @ApiTags('upload组')
 @Controller('upload')
@@ -17,7 +28,7 @@ export class UploadController {
   @UseInterceptors(FileInterceptor('file'))
   upload(@UploadedFile() file) {
     console.log(file)
-    return {message: 'upload  images success'}
+    return { message: 'upload  images success' }
   }
 
   @Get('download')
@@ -27,10 +38,10 @@ export class UploadController {
   }
 
   @Get('stream')
-  async stream(@Res() res: Response)  {
-    const url = join(__dirname, '../files/1697776063925.png');
-    const tarStream = new zip.Stream();
-    await tarStream.addEntry(url);
+  async stream(@Res() res: Response) {
+    const url = join(__dirname, '../files/1697776063925.png')
+    const tarStream = new zip.Stream()
+    await tarStream.addEntry(url)
 
     res.setHeader('Content-Type', 'application/octet-stream')
     res.setHeader('Content-Disposition', `attachment; filename=afacode`)
@@ -40,8 +51,6 @@ export class UploadController {
 
   @Get()
   findAll() {
-    return {message: 'upload  get'};
+    return { message: 'upload  get' }
   }
-
-  
 }

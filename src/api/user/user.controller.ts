@@ -1,9 +1,22 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query, UseGuards, BadRequestException, HttpStatus, HttpException } from '@nestjs/common';
-import { UserService } from './user.service';
-import { RegisterUserDto, UserLoginDto } from './dto/index.dto';
-import { ApiTags } from '@nestjs/swagger';
-import { LoginGuard } from 'src/guard/login.guard';
-import { IsPression, IsPublicUrl } from 'src/common/publicUrl.decorator';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Query,
+  UseGuards,
+  BadRequestException,
+  HttpStatus,
+  HttpException,
+} from '@nestjs/common'
+import { UserService } from './user.service'
+import { RegisterUserDto, UserLoginDto } from './dto/index.dto'
+import { ApiTags } from '@nestjs/swagger'
+import { LoginGuard } from 'src/guard/login.guard'
+import { IsPression, IsPublicUrl } from 'src/common/publicUrl.decorator'
 
 @ApiTags('用户组')
 @Controller('user')
@@ -18,7 +31,7 @@ export class UserController {
 
   @IsPublicUrl()
   @Post('login')
-  async userLogin(@Body()  loginUser: UserLoginDto) {
+  async userLogin(@Body() loginUser: UserLoginDto) {
     return await this.userService.userLogin(loginUser, false)
   }
 
@@ -29,7 +42,7 @@ export class UserController {
 
   @IsPublicUrl()
   @Post('/admin/login')
-  async adminLogin(@Body()  loginUser: UserLoginDto) {
+  async adminLogin(@Body() loginUser: UserLoginDto) {
     return await this.userService.userLogin(loginUser, true)
   }
 
@@ -45,5 +58,4 @@ export class UserController {
     return new HttpException('111', HttpStatus.EXPECTATION_FAILED)
     // return this.userService.setRedis();
   }
-  
 }
