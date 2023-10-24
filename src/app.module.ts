@@ -1,25 +1,25 @@
-import { MiddlewareConsumer, Module, RequestMethod } from '@nestjs/common'
-import { UserModule } from './api/user/user.module'
-import { UploadModule } from './plugins/upload/upload.module'
-import { TypeOrmModule } from '@nestjs/typeorm'
-import { ConfigModule, ConfigService } from '@nestjs/config'
-import { AccountModule } from './api/account/account.module'
-import { LoginModule } from './api/login/login.module'
-import { RedisModule } from './plugins/redis/redis.module'
-import configuration from './config'
-import { JwtModule } from '@nestjs/jwt'
-import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core'
-import { LoginGuard } from './guard/login.guard'
-import { PermissionGuard } from './guard/permission.guard'
-import * as winston from 'winston'
+import { MiddlewareConsumer, Module, RequestMethod } from '@nestjs/common';
+import { UserModule } from './api/user/user.module';
+import { UploadModule } from './plugins/upload/upload.module';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { AccountModule } from './api/account/account.module';
+import { LoginModule } from './api/login/login.module';
+import { RedisModule } from './plugins/redis/redis.module';
+import configuration from './config';
+import { JwtModule } from '@nestjs/jwt';
+import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
+import { LoginGuard } from './guard/login.guard';
+import { PermissionGuard } from './guard/permission.guard';
+import * as winston from 'winston';
 // import 'winston-daily-rotate-file';
-import DailyRotateFile = require('winston-daily-rotate-file')
-import { WinstonModule, utilities } from 'nest-winston'
-import { LoggerMiddleware } from './middleware/logger.middleware'
-import { ResponseInterceptor } from './common/response.interceptor'
-import { HttpFilter } from './common/http.filter'
-import { WsGateway } from './ws/ws.gateway'
-import { GatewayModule } from './ws/gateway.module'
+import DailyRotateFile = require('winston-daily-rotate-file');
+import { WinstonModule, utilities } from 'nest-winston';
+import { LoggerMiddleware } from './middleware/logger.middleware';
+import { ResponseInterceptor } from './common/response.interceptor';
+import { HttpFilter } from './common/http.filter';
+import { WsGateway } from './ws/ws.gateway';
+import { GatewayModule } from './ws/gateway.module';
 
 // docker run -e MYSQL_ROOT_PASSWORD=123456 -p 330603306 -d mysql:8
 @Module({
@@ -51,7 +51,7 @@ import { GatewayModule } from './ws/gateway.module'
           signOptions: {
             expiresIn: '1d', // 30 min
           },
-        }
+        };
       },
       inject: [ConfigService],
     }),
@@ -116,6 +116,6 @@ import { GatewayModule } from './ws/gateway.module'
 export class AppModule {
   configure(consumer: MiddlewareConsumer) {
     // 全局logger
-    consumer.apply(LoggerMiddleware).forRoutes({ path: '*', method: RequestMethod.ALL })
+    consumer.apply(LoggerMiddleware).forRoutes({ path: '*', method: RequestMethod.ALL });
   }
 }

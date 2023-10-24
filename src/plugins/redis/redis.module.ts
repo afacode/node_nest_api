@@ -1,6 +1,6 @@
-import { Global, Module } from '@nestjs/common'
-import { RedisService } from './redis.service'
-import { createClient } from 'redis'
+import { Global, Module } from '@nestjs/common';
+import { RedisService } from './redis.service';
+import { createClient } from 'redis';
 
 // docker run --name redis -d -p 6379:6379 redis:6.0
 @Global()
@@ -16,9 +16,9 @@ import { createClient } from 'redis'
             port: 6379,
           },
           database: 1,
-        })
-        await client.connect()
-        return client
+        });
+        await client.connect();
+        return client;
       },
     },
   ],

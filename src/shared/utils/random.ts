@@ -1,4 +1,4 @@
-import { networkInterfaces } from 'os'
+import { networkInterfaces } from 'os';
 
 /**
  * 生成随机字符串
@@ -7,28 +7,28 @@ import { networkInterfaces } from 'os'
  * @returns {string} 生成字符串
  */
 export const randomString = (length = 8, charSet?: string): string => {
-  charSet = charSet || 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
+  charSet = charSet || 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
   // tslint:disable-next-line:no-shadowed-variable
-  let randomString = ''
+  let randomString = '';
   for (let i = 0; i < length; i++) {
-    const randomPoz = Math.floor(Math.random() * charSet.length)
-    randomString += charSet.substring(randomPoz, randomPoz + 1)
+    const randomPoz = Math.floor(Math.random() * charSet.length);
+    randomString += charSet.substring(randomPoz, randomPoz + 1);
   }
-  return randomString
-}
+  return randomString;
+};
 
 /**
  * 获取服务部署 IP 地址
  */
 export function getIPAdress(): string {
-  const interfaces = networkInterfaces()
+  const interfaces = networkInterfaces();
 
   for (const devName in interfaces) {
-    const iface = interfaces[devName]
+    const iface = interfaces[devName];
     for (let i = 0; i < iface.length; i++) {
-      const alias = iface[i]
+      const alias = iface[i];
       if (alias.family === 'IPv4' && alias.address !== '127.0.0.1' && !alias.internal) {
-        return alias.address
+        return alias.address;
       }
     }
   }
@@ -41,5 +41,5 @@ export function getIPAdress(): string {
 export function enumToArray<E>(Enum: any): E[] {
   return Object.keys(Enum)
     .filter((key) => typeof Enum[key as any] === 'number')
-    .map((key) => Enum[key])
+    .map((key) => Enum[key]);
 }

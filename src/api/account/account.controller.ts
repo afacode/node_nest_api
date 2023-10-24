@@ -1,8 +1,8 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common'
-import { AccountService } from './account.service'
-import { CreateAccountDto } from './dto/create-account.dto'
-import { UpdateAccountDto } from './dto/update-account.dto'
-import { ApiTags } from '@nestjs/swagger'
+import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { AccountService } from './account.service';
+import { CreateAccountDto } from './dto/create-account.dto';
+import { UpdateAccountDto } from './dto/update-account.dto';
+import { ApiTags } from '@nestjs/swagger';
 
 @ApiTags('account组')
 @Controller('account')
@@ -11,26 +11,26 @@ export class AccountController {
 
   @Post()
   create(@Body() createAccountDto: CreateAccountDto) {
-    return this.accountService.create(createAccountDto)
+    return this.accountService.create(createAccountDto);
   }
 
   @Get()
   findAll() {
-    return this.accountService.findAll()
+    return this.accountService.findAll();
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.accountService.findOne(+id)
+    return this.accountService.findOne(+id);
   }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateAccountDto: UpdateAccountDto) {
-    return this.accountService.update(+id, updateAccountDto)
+    return this.accountService.update(+id, updateAccountDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.accountService.remove(+id)
+    return this.accountService.remove(+id);
   }
 }

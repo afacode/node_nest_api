@@ -1,13 +1,13 @@
 export class Pagination {
-  total: number
+  total: number;
 
-  page: number
+  page: number;
 
-  size: number
+  size: number;
 }
 
 export class PaginationResponseDto<T> extends Pagination {
-  list: Array<T>
+  list: Array<T>;
 }
 
 export class ResultData {}

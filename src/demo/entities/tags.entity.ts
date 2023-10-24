@@ -8,28 +8,28 @@ import {
   PrimaryGeneratedColumn,
   Relation,
   UpdateDateColumn,
-} from 'typeorm'
-import { Demo } from './demo.entity'
+} from 'typeorm';
+import { Demo } from './demo.entity';
 
 @Entity()
 export class Tags {
   @PrimaryGeneratedColumn()
-  id: number
+  id: number;
 
   @Column()
-  name: string
+  name: string;
 
   @CreateDateColumn({ type: 'timestamp' })
-  createTime: Date
+  createTime: Date;
 
   @UpdateDateColumn({ type: 'timestamp' })
-  updateTime: Date
+  updateTime: Date;
 
   @ManyToOne(() => Demo, (user) => user.tags)
   @JoinColumn({ name: 'user_id' })
-  user: Demo
+  user: Demo;
 
   @OneToOne(() => Demo, (demo) => demo.test)
   @JoinColumn({ name: 'test_id' })
-  test: Relation<Demo>
+  test: Relation<Demo>;
 }

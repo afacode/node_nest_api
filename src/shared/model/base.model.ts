@@ -1,29 +1,29 @@
-import { Transform } from 'class-transformer'
+import { Transform } from 'class-transformer';
 import {
   BaseEntity,
   CreateDateColumn,
   DeleteDateColumn,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
-} from 'typeorm'
+} from 'typeorm';
 
 export class BaseModel {
   @CreateDateColumn({ type: 'timestamp', name: 'create_at' })
-  createAt: Date
+  createAt: Date;
 
   @UpdateDateColumn({ type: 'timestamp', name: 'update_at' })
-  updateAt: Date
+  updateAt: Date;
 
   @DeleteDateColumn({ type: 'timestamp', name: 'delete_at', select: false })
-  deleteAt: Date
+  deleteAt: Date;
 }
 
 export class BaseModelWithUUIDPrimary extends BaseModel {
   @PrimaryGeneratedColumn('uuid', { name: 'id' })
-  id: string
+  id: string;
 }
 
 export class BaseModelWithIDPrimary extends BaseModel {
   @PrimaryGeneratedColumn({ name: 'id' })
-  id: number
+  id: number;
 }

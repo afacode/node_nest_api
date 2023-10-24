@@ -6,12 +6,12 @@ export default () => ({
   },
   TEST_ENV: process.env.TEST_ENV,
   jwtSecret: process.env.JWT_SECRET,
-})
+});
 
 export const getEnv = () => {
-  return process.env.RUN_ENV
-}
+  return process.env.RUN_ENV;
+};
 
-export const IS_DEV = getEnv() == 'dev'
+export const IS_DEV = getEnv() == 'dev';
 
-export const IS_PROD = getEnv() == 'prod'
+export const IS_PROD = getEnv() == 'prod';

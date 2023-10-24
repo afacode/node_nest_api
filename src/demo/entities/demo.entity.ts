@@ -8,43 +8,43 @@ import {
   OneToOne,
   PrimaryGeneratedColumn,
   Relation,
-} from 'typeorm'
-import { Tags } from './tags.entity'
+} from 'typeorm';
+import { Tags } from './tags.entity';
 
 @Entity()
 export class Demo {
   @PrimaryGeneratedColumn()
-  id: number
+  id: number;
 
   @Column()
-  name: string
+  name: string;
 
   // select 查询不显示
   @Column({ select: false, comment: '密码', nullable: true })
-  password: string
+  password: string;
 
   @Column({ nullable: true })
-  age: number
+  age: number;
 
   @Column()
   @Generated('uuid')
-  uuid: string
+  uuid: string;
 
   @CreateDateColumn({ type: 'timestamp' })
-  createTime: Date
+  createTime: Date;
 
   @Column({ type: 'simple-array', nullable: true })
-  hobby: string[]
+  hobby: string[];
 
   @Column({ type: 'simple-json', nullable: true })
-  json: { address: string; age: number }
+  json: { address: string; age: number };
 
   // 多对一关系中 拥有者是 多对一 一方
   @OneToMany(() => Tags, (tags) => tags.user)
-  tags: Tags[]
+  tags: Tags[];
 
   @OneToOne(() => Tags, (tag) => tag.test)
-  test: Relation<Tags>
+  test: Relation<Tags>;
 }
 
 //  https://typeorm.nodejs.cn/find-options

@@ -1,21 +1,21 @@
-import { IsEmail, IsNotEmpty, IsString, Min, MinLength } from 'class-validator'
+import { IsEmail, IsNotEmpty, IsString, Min, MinLength } from 'class-validator';
 
 export class RegisterUserDto {
   @IsNotEmpty({ message: '用户名不能为空' })
-  username: string
+  username: string;
 
   @IsNotEmpty({ message: '昵称不能为空' })
-  nikeName: string
+  nikeName: string;
 
   @IsEmail()
-  email: string
+  email: string;
 
   @IsNotEmpty({ message: '验证码不能为空' })
-  captcha: string
+  captcha: string;
 
   @IsNotEmpty({ message: '密码不能为空' })
   @MinLength(6, { message: '密码长度不能少于6位' })
-  password: string
+  password: string;
 
   // @IsString()
   // @IsNotEmpty()
@@ -24,9 +24,9 @@ export class RegisterUserDto {
 
 export class UserLoginDto {
   @IsNotEmpty({ message: '用户名不能为空' })
-  username: string
+  username: string;
 
   @IsNotEmpty({ message: '密码不能为空' })
   @MinLength(6, { message: '密码长度不能少于6位' })
-  password: string
+  password: string;
 }
