@@ -18,7 +18,11 @@ import { Server, Socket } from 'socket.io';
 })
 export class WsGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
   @WebSocketServer()
-  server: Server;
+  private server: Server;
+
+  get socketServer(): Server {
+    return this.server;
+  }
 
   currentUsers = 0;
 

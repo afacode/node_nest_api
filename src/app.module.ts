@@ -12,23 +12,23 @@ import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { LoginGuard } from './guard/login.guard';
 import { PermissionGuard } from './guard/permission.guard';
 import * as winston from 'winston';
-// import 'winston-daily-rotate-file';
 import DailyRotateFile = require('winston-daily-rotate-file');
 import { WinstonModule, utilities } from 'nest-winston';
 import { LoggerMiddleware } from './middleware/logger.middleware';
 import { ResponseInterceptor } from './common/response.interceptor';
 import { HttpFilter } from './common/http.filter';
-import { WsGateway } from './ws/ws.gateway';
-import { GatewayModule } from './ws/gateway.module';
+import { WsModule } from './ws/ws.module';
+import { ScheduleModule } from '@nestjs/schedule';
+import { CoreModule } from './plugins/core/core.module';
 
 // docker run -e MYSQL_ROOT_PASSWORD=123456 -p 330603306 -d mysql:8
 @Module({
   imports: [
     // 多个env文件谁先加载使用那个
     ConfigModule.forRoot({
-      envFilePath: ['.env.development'],
+      envFilePath: [ '.env.development' ],
       isGlobal: true,
-      load: [configuration],
+      load: [ configuration ],
     }),
     TypeOrmModule.forRoot({
       type: 'mysql',
@@ -37,7 +37,7 @@ import { GatewayModule } from './ws/gateway.module';
       username: 'root',
       password: '123456',
       database: 'test',
-      entities: [__dirname + '/**/*.entity{.ts, .js}'],
+      entities: [ __dirname + '/**/*.entity{.ts, .js}' ],
       synchronize: true,
       retryAttempts: 10, //	尝试连接数据库的次数（默认值：10）
       retryDelay: 800, //	连接重试之间的延迟（毫秒）（默认值：3000）
@@ -53,7 +53,7 @@ import { GatewayModule } from './ws/gateway.module';
           },
         };
       },
-      inject: [ConfigService],
+      inject: [ ConfigService ],
     }),
     WinstonModule.forRoot({
       transports: [
@@ -85,12 +85,14 @@ import { GatewayModule } from './ws/gateway.module';
         }),
       ],
     }),
+    ScheduleModule.forRoot(),
     UserModule,
     UploadModule,
     AccountModule,
     LoginModule,
     RedisModule,
-    GatewayModule,
+    WsModule,
+    CoreModule,
   ],
   controllers: [],
   providers: [
@@ -110,7 +112,6 @@ import { GatewayModule } from './ws/gateway.module';
       provide: APP_INTERCEPTOR,
       useClass: ResponseInterceptor, //全局响应拦截器
     },
-    // WsGateway
   ],
 })
 export class AppModule {
