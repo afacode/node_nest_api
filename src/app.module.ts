@@ -22,6 +22,17 @@ import { ScheduleModule } from '@nestjs/schedule';
 import { CoreModule } from './plugins/core/core.module';
 
 // docker run -e MYSQL_ROOT_PASSWORD=123456 -p 330603306 -d mysql:8
+
+// 在线MySQL db4free.net's MySQL 8.2数据库的权限。 访问域名为：db4free.net 端口为：3306
+// 数据库: afacode_tes
+// 用户名: afacode_tes
+/**
+ * 在线Redis 7.2.0
+ * Database name afacode-free-db
+ * Public endpoint redis-11726.c299.asia-northeast1-1.gce.cloud.redislabs.com:11726
+ * Username: "default"
+ * password: fCTjrdsKCXcUKgTdrzIFJBz5qka7ItnI
+ */
 @Module({
   imports: [
     // 多个env文件谁先加载使用那个
