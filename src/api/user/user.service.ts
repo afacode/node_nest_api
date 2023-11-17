@@ -21,7 +21,7 @@ export class UserService {
   jwtService: JwtService;
 
   constructor(
-    @InjectRepository(User) private readonly user: Repository<User>,
+    @InjectRepository(User) private readonly userRepository: Repository<User>,
     @InjectRepository(Role) private readonly roleRepository: Repository<Role>,
     @InjectRepository(Permission) private readonly permissionRepository: Repository<Permission>,
     private configService: ConfigService,
@@ -39,7 +39,7 @@ export class UserService {
       throw new HttpException('验证码不正确', HttpStatus.BAD_REQUEST);
     }
 
-    const u = await this.user.findOneBy({ username: registerUser.username });
+    const u = await this.userRepository.findOneBy({ username: registerUser.username });
 
     if (u) {
       throw new HttpException('用户已存在', HttpStatus.BAD_REQUEST);
@@ -53,7 +53,7 @@ export class UserService {
     newUser.nikeName = registerUser.nikeName;
 
     try {
-      await this.user.save(newUser);
+      await this.userRepository.save(newUser);
       return 'register success';
     } catch (error) {
       this.logger.error(error, UserService);
@@ -62,7 +62,7 @@ export class UserService {
   }
 
   async userLogin(loginUser: UserLoginDto, isAdmin: boolean) {
-    const findOne = await this.user.findOne({
+    const findOne = await this.userRepository.findOne({
       where: { username: loginUser.username, isAdmin: isAdmin },
       relations: ['roles', 'roles.permissions'],
     });
@@ -120,7 +120,7 @@ export class UserService {
   }
 
   async findUserById(userId: string, isAdmin: boolean) {
-    const user = await this.user.findOne({
+    const user = await this.userRepository.findOne({
       where: {
         id: userId,
         isAdmin: isAdmin,

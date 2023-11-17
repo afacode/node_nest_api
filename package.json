@@ -1,8 +1,8 @@
 {
-  "name": "n_demo",
+  "name": "node_nest_api",
   "version": "0.0.1",
-  "description": "",
-  "author": "",
+  "description": "nest rest api",
+  "author": "afacode",
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
