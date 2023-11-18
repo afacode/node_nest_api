@@ -13,7 +13,7 @@ async function bootstrap() {
   const config = app.get(ConfigService);
 
   // 静态资源访问
-  app.useStaticAssets(join(__dirname, 'files'), {
+  app.useStaticAssets(join(process.cwd(), 'files'), {
     prefix: '/public',
   });
 

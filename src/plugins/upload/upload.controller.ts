@@ -9,26 +9,40 @@ import {
   UploadedFile,
   UseInterceptors,
   Res,
+  UploadedFiles,
 } from '@nestjs/common';
 import { UploadService } from './upload.service';
 import { CreateUploadDto } from './dto/create-upload.dto';
 import { UpdateUploadDto } from './dto/update-upload.dto';
-import { FileInterceptor } from '@nestjs/platform-express';
+import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import { zip } from 'compressing';
 import { join } from 'path';
 import type { Response } from 'express';
+import { Express } from 'express'
 import { ApiTags } from '@nestjs/swagger';
+import { IsPublicUrl } from 'src/common/publicUrl.decorator';
 
 @ApiTags('upload组')
 @Controller('upload')
 export class UploadController {
   constructor(private readonly uploadService: UploadService) {}
 
-  @Post('images')
+  // 要上传单个文件
+  @IsPublicUrl()
+  @Post('file')
   @UseInterceptors(FileInterceptor('file'))
-  upload(@UploadedFile() file) {
-    console.log(file);
-    return { message: 'upload  images success' };
+  async upload(@UploadedFile() file: Express.Multer.File) {
+    const url = await this.uploadService.uploadFile(file)
+    return {url}
+  }
+
+  // 多文件上传
+  @Post('files')
+  @UseInterceptors(FilesInterceptor('files'))
+  uploadFiles(@UploadedFiles() files: Array<Express.Multer.File>) {
+    console.log(files);
+
+    return 'success'
   }
 
   @Get('download')
@@ -47,10 +61,5 @@ export class UploadController {
     res.setHeader('Content-Disposition', `attachment; filename=afacode`);
 
     tarStream.pipe(res);
-  }
-
-  @Get()
-  findAll() {
-    return { message: 'upload  get' };
   }
 }
