@@ -3,10 +3,10 @@ import { AppModule } from './app.module';
 import * as cors from 'cors';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { join } from 'path';
-import { Logger, ValidationPipe } from '@nestjs/common';
-import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import { HttpStatus, Logger, UnprocessableEntityException, ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { setupSwagger } from './common/swagger';
+import { ValidationError } from 'class-validator';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
@@ -18,11 +18,27 @@ async function bootstrap() {
     prefix: '/public',
   });
 
-  // 全局中间件
+  // cors
   app.use(cors());
+  // app.enableCors();
 
   // 全局pipe validate
-  app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalPipes(
+    new ValidationPipe({
+      transform: true,
+      whitelist: true,
+      forbidNonWhitelisted: true,
+      errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY,
+      exceptionFactory: (errors: ValidationError[]) => {
+        return new UnprocessableEntityException(
+          errors
+            .filter((item) => !!item.constraints)
+            .flatMap((item) => Object.values(item.constraints))
+            .join('; '),
+        );
+      },
+    }),
+  );
 
   // websocket
   // app.useWebSocketAdapter(new SocketIoAdapter(app, app.get(ConfigService)));

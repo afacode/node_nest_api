@@ -20,6 +20,8 @@ import { HttpFilter } from './common/http.filter';
 import { WsModule } from './ws/ws.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { CoreModule } from './plugins/core/core.module';
+import { ApiTransformInterceptor } from './common/interceptors/api-transform.interceptor';
+import { ApiExceptionFilter } from './common/filters/api-exception.filter';
 
 // docker run -e MYSQL_ROOT_PASSWORD=123456 -p 330603306 -d mysql:8
 
@@ -137,11 +139,11 @@ import { CoreModule } from './plugins/core/core.module';
     },
     {
       provide: APP_FILTER,
-      useClass: HttpFilter, //全局异常拦截器
+      useClass: ApiExceptionFilter, // HttpFilter, //全局 API 异常拦截器
     },
     {
       provide: APP_INTERCEPTOR,
-      useClass: ResponseInterceptor, //全局响应拦截器
+      useClass: ApiTransformInterceptor, // ResponseInterceptor, // 全局API 响应拦截器
     },
   ],
 })
