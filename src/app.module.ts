@@ -22,6 +22,7 @@ import { ScheduleModule } from '@nestjs/schedule';
 import { CoreModule } from './plugins/core/core.module';
 import { ApiTransformInterceptor } from './common/interceptors/api-transform.interceptor';
 import { ApiExceptionFilter } from './common/filters/api-exception.filter';
+import { AdminModule } from './modules/admin/admin.module';
 
 // docker run -e MYSQL_ROOT_PASSWORD=123456 -p 330603306 -d mysql:8
 
@@ -63,19 +64,6 @@ import { ApiExceptionFilter } from './common/filters/api-exception.filter';
       },
       inject: [ ConfigService ],
     }),
-    // TypeOrmModule.forRoot({
-      // type: 'mysql',
-      // host: 'localhost',
-      // port: 3306,
-      // username: 'root',
-      // password: '123456',
-      // database: 'test',
-      // entities: [ __dirname + '/**/*.entity{.ts, .js}' ],
-      // synchronize: true,
-      // retryAttempts: 10, //	尝试连接数据库的次数（默认值：10）
-      // retryDelay: 800, //	连接重试之间的延迟（毫秒）（默认值：3000）
-      // autoLoadEntities: true, //	如果是 true，将自动加载实体（默认值：false）
-    // }),
     JwtModule.registerAsync({
       global: true,
       useFactory(configService: ConfigService) {
@@ -90,10 +78,6 @@ import { ApiExceptionFilter } from './common/filters/api-exception.filter';
     }),
     WinstonModule.forRoot({
       transports: [
-        // new winston.transports.Console({
-        //   format: winston.format.printf(info => `[app] ${info.level}: ${info.message}`),
-        //   silent: process.env.NODE_ENV === 'production'
-        // }),
         new winston.transports.Console({
           format: winston.format.combine(
             winston.format.timestamp(),
@@ -126,17 +110,18 @@ import { ApiExceptionFilter } from './common/filters/api-exception.filter';
     RedisModule,
     WsModule,
     CoreModule,
+    AdminModule,
   ],
   controllers: [],
   providers: [
-    {
-      provide: APP_GUARD,
-      useClass: LoginGuard, //  全局启用身份验证 配合白名单
-    },
-    {
-      provide: APP_GUARD,
-      useClass: PermissionGuard, //  全局启用身份验证 配合白名单
-    },
+    // {
+    //   provide: APP_GUARD,
+    //   useClass: LoginGuard, //  全局启用身份验证 配合白名单
+    // },
+    // {
+    //   provide: APP_GUARD,
+    //   useClass: PermissionGuard, //  全局启用身份验证 配合白名单
+    // },
     {
       provide: APP_FILTER,
       useClass: ApiExceptionFilter, // HttpFilter, //全局 API 异常拦截器

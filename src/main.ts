@@ -47,8 +47,10 @@ async function bootstrap() {
   setupSwagger(app);
 
   const PORT = config.get<number>('SERVE_PORT', 3000);
+  const SWAGGER_API = config.get<string>('swagger.path');
   await app.listen(PORT, () => {
-    Logger.log(`api服务已经启动,请访问: ${PORT}`);
+    Logger.log(`api服务已经启动,请访问: http://localhost:${PORT}`);
+    Logger.log(`API文档已生成,请访问: http://localhost:${PORT}/${SWAGGER_API}`);
   });
 }
 bootstrap();
