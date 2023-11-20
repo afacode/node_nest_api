@@ -6,7 +6,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AccountModule } from './api/account/account.module';
 import { LoginModule } from './api/login/login.module';
 import { RedisModule } from './plugins/redis/redis.module';
-import configuration from './config';
+import {ConfigurationKeyPaths, getConfiguration} from './config'
 import { JwtModule } from '@nestjs/jwt';
 import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { LoginGuard } from './guard/login.guard';
@@ -39,21 +39,41 @@ import { CoreModule } from './plugins/core/core.module';
     ConfigModule.forRoot({
       envFilePath: [ '.env.development' ],
       isGlobal: true,
-      load: [ configuration ],
+      load: [ getConfiguration ],
     }),
-    TypeOrmModule.forRoot({
-      type: 'mysql',
-      host: 'localhost',
-      port: 3306,
-      username: 'root',
-      password: '123456',
-      database: 'test',
-      entities: [ __dirname + '/**/*.entity{.ts, .js}' ],
-      synchronize: true,
-      retryAttempts: 10, //	尝试连接数据库的次数（默认值：10）
-      retryDelay: 800, //	连接重试之间的延迟（毫秒）（默认值：3000）
-      autoLoadEntities: true, //	如果是 true，将自动加载实体（默认值：false）
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory(configService: ConfigService<ConfigurationKeyPaths>) {
+        return {
+          autoLoadEntities: true,
+          type: configService.get<any>('mysql.type'),
+          host: configService.get<string>('mysql.host'),
+          port: configService.get<number>('mysql.port'),
+          username: configService.get<string>('mysql.username'),
+          password: configService.get<string>('mysql.password'),
+          database: configService.get<string>('mysql.database'),
+          synchronize: configService.get<boolean>('mysql.synchronize'),
+          logging: configService.get('mysql.logging'),
+          retryAttempts: 10, //	尝试连接数据库的次数（默认值：10）
+          retryDelay: 800, //	连接重试之间的延迟（毫秒）（默认值：3000）
+          entities: [ __dirname + '/**/*.entity{.ts, .js}' ],
+        }
+      },
+      inject: [ ConfigService ],
     }),
+    // TypeOrmModule.forRoot({
+      // type: 'mysql',
+      // host: 'localhost',
+      // port: 3306,
+      // username: 'root',
+      // password: '123456',
+      // database: 'test',
+      // entities: [ __dirname + '/**/*.entity{.ts, .js}' ],
+      // synchronize: true,
+      // retryAttempts: 10, //	尝试连接数据库的次数（默认值：10）
+      // retryDelay: 800, //	连接重试之间的延迟（毫秒）（默认值：3000）
+      // autoLoadEntities: true, //	如果是 true，将自动加载实体（默认值：false）
+    // }),
     JwtModule.registerAsync({
       global: true,
       useFactory(configService: ConfigService) {
