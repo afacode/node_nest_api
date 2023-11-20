@@ -51,16 +51,3 @@ export class ApiTransformInterceptor<T> implements NestInterceptor {
     );
   }
 }
-
-export class ResponseData {
-  public status: number;
-  public message: string;
-  public data: any;
-  public success: boolean;
-  constructor(messageType: any, data = null, success = true) {
-    this.status = 0;
-    this.message = messageType;
-    this.data = data;
-    this.success = success;
-  }
-}

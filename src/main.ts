@@ -3,9 +3,10 @@ import { AppModule } from './app.module';
 import * as cors from 'cors';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { join } from 'path';
-import { ValidationPipe } from '@nestjs/common';
+import { Logger, ValidationPipe } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { ConfigService } from '@nestjs/config';
+import { setupSwagger } from './common/swagger';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
@@ -26,18 +27,12 @@ async function bootstrap() {
   // websocket
   // app.useWebSocketAdapter(new SocketIoAdapter(app, app.get(ConfigService)));
 
-  const options = new DocumentBuilder()
-    .setTitle('doc')
-    .setDescription('doc description')
-    .setVersion('1.0')
-    .addTag('1.0')
-    .build();
-  const document = SwaggerModule.createDocument(app, options);
-  SwaggerModule.setup('doc', app, document);
+  // swagger
+  setupSwagger(app);
 
   const PORT = config.get<number>('SERVE_PORT', 3000);
   await app.listen(PORT, () => {
-    console.log(`app listen port ${PORT}`);
+    Logger.log(`api服务已经启动,请访问: ${PORT}`);
   });
 }
 bootstrap();
