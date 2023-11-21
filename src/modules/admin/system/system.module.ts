@@ -12,6 +12,11 @@ import SysUserRole from '@/entities/admin/sys_user_role.emtity';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { SysUserService } from './user/user.service';
+import { SysUserController } from './user/user.controller';
+import { SysMenuController } from './menu/menu.controller';
+import { SysMenuService } from './menu/menu.service';
+import { SysRoleController } from './role/role.controller';
+import { SysRoleService } from './role/role.service';
 
 @Module({
   imports: [
@@ -30,13 +35,21 @@ import { SysUserService } from './user/user.service';
       SysConfig,
     ]),
   ],
-  controllers: [],
+  controllers: [
+    SysUserController,
+    SysMenuController,
+    SysRoleController,
+  ],
   providers: [
     SysUserService,
+    SysMenuService,
+    SysRoleService,
   ],
   exports: [
     TypeOrmModule,
     SysUserService,
+    SysMenuService,
+    SysRoleService,
   ],
 })
 export class SystemModule {}
