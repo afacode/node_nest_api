@@ -7,7 +7,6 @@ import { AccountModule } from './api/account/account.module';
 import { LoginModule } from './api/login/login.module';
 import { RedisModule } from './plugins/redis/redis.module';
 import {ConfigurationKeyPaths, getConfiguration} from './config'
-import { JwtModule } from '@nestjs/jwt';
 import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { LoginGuard } from './guard/login.guard';
 import { PermissionGuard } from './guard/permission.guard';
@@ -23,6 +22,7 @@ import { CoreModule } from './plugins/core/core.module';
 import { ApiTransformInterceptor } from './common/interceptors/api-transform.interceptor';
 import { ApiExceptionFilter } from './common/filters/api-exception.filter';
 import { AdminModule } from './modules/admin/admin.module';
+import { SharedModule } from './shared/shared.module';
 
 // docker run -e MYSQL_ROOT_PASSWORD=123456 -p 330603306 -d mysql:8
 
@@ -64,18 +64,6 @@ import { AdminModule } from './modules/admin/admin.module';
       },
       inject: [ ConfigService ],
     }),
-    JwtModule.registerAsync({
-      global: true,
-      useFactory(configService: ConfigService) {
-        return {
-          secret: configService.get('jwtSecret'),
-          signOptions: {
-            expiresIn: '1d', // 30 min
-          },
-        };
-      },
-      inject: [ ConfigService ],
-    }),
     WinstonModule.forRoot({
       transports: [
         new winston.transports.Console({
@@ -110,6 +98,8 @@ import { AdminModule } from './modules/admin/admin.module';
     // RedisModule,
     // WsModule,
     // CoreModule,
+    // custom module
+    SharedModule,
     AdminModule,
   ],
   controllers: [],

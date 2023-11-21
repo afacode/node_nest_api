@@ -17,7 +17,7 @@ export class LoginService {
   ) {}
 
   async getRedisPermsById(id: number) {
-    return 1;
+    return '1';
   }
 
   /**

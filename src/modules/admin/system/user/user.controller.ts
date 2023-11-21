@@ -1,12 +1,12 @@
 import { Body, Controller, Get, Post, Query } from '@nestjs/common';
 import { ApiOkResponse, ApiOperation, ApiSecurity, ApiTags } from '@nestjs/swagger';
 import {
-  CreateUserDto,
-  DeleteUserDto,
+  // CreateUserDto,
+  // DeleteUserDto,
   InfoUserDto,
   PageSearchUserDto,
-  PasswordUserDto,
-  UpdateUserDto,
+  // PasswordUserDto,
+  // UpdateUserDto,
   UserDetailInfo,
 } from './user.dto';
 import { ADMIN_PREFIX } from '../../admin.constants';
@@ -36,14 +36,15 @@ export class SysUserController {
     @Body() dto: PageSearchUserDto,
     @AdminUser() user,
   ) {
-    const [list, total] = await this.userService.page(user.uid, dto);
-    return {
-        list,
-        pagination: {
-          total,
-          page: dto.page,
-          size: dto.limit,
-        },
-      };
+    return {name: '分页获取管理员列表'}
+    // const [list, total] = await this.userService.page(user.uid, dto);
+    // return {
+    //     list,
+    //     pagination: {
+    //       total,
+    //       page: dto.page,
+    //       size: dto.limit,
+    //     },
+    //   };
   }
 }

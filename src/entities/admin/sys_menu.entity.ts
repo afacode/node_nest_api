@@ -12,11 +12,11 @@ export default class SysMenu extends BaseModelWithIDPrimary {
     @ApiProperty()
     name: string
 
-    @Column({name: 'router', comment: '菜单地址'})
+    @Column({name: 'router', nullable: true, comment: '菜单地址'})
     @ApiProperty()
     router: string
 
-    @Column({name: 'perms', comment: '权限标识'})
+    @Column({name: 'perms', nullable: true, comment: '权限标识'})
     @ApiProperty()
     perms: string
 

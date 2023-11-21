@@ -1,9 +1,5 @@
 export const getConfiguration = () => ({
   port: parseInt(process.env.PORT, 10) || 3000,
-  database: {
-    host: process.env.DB_HOST,
-    port: parseInt(process.env.DB_PORT, 10) || 3306,
-  },
   TEST_ENV: process.env.TEST_ENV,
   jwtSecret: process.env.JWT_SECRET,
 
@@ -20,7 +16,7 @@ export const getConfiguration = () => ({
       password:
         process.env.MYSQL_PASSWORD || process.env.MYSQL_ROOT_PASSWORD || '',
       database: process.env.MYSQL_DATABASE,
-      entities: [__dirname + '/../**/entities/*.entity.{ts,js}'],
+      entities: [__dirname + '/**/*.entity.{ts,js}'],
       migrations: ['dist/src/migrations/**/*.js'],
       autoLoadEntities: true,
       /** https://typeorm.io/migrations */

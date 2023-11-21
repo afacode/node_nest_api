@@ -1,12 +1,12 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
 import { camelCase, isEmpty } from 'lodash';
-import //   CreateUserDto,
+// import {} from './user.dto'
+//   CreateUserDto,
 //   PageSearchUserDto,
 //   UpdatePasswordDto,
 //   UpdateUserDto,
 //   UpdateUserInfoDto,
-'./user.dto';
 import SysUser from '@/entities/admin/sys_user.entity';
 import { EntityManager, Repository } from 'typeorm';
 import SysDepartment from '@/entities/admin/sys_department.entity';
