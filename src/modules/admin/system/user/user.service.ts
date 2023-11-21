@@ -12,6 +12,8 @@ import { EntityManager, Repository } from 'typeorm';
 import SysDepartment from '@/entities/admin/sys_department.entity';
 import SysUserRole from '@/entities/admin/sys_user_role.emtity';
 import { ApiException } from '@/common/exceptions/api.exception';
+import { CreateUserDto } from './user.dto';
+import { UtilService } from '@/shared/services/util.service';
 
 @Injectable()
 export class SysUserService {
@@ -25,7 +27,55 @@ export class SysUserService {
     private userRoleRepository: Repository<SysUserRole>,
 
     @InjectEntityManager() private entityManager: EntityManager,
+
+    private util: UtilService,
   ) {}
+
+  /**
+   * 增加系统用户，如果返回false则表示已存在该用户
+   * @param param Object 对应SysUser实体类
+   */
+  async add(param: CreateUserDto): Promise<void> {
+    const exists = await this.userRepository.findOne({
+      where: {
+        username: param.username
+      },
+    });
+    if (!isEmpty(exists)) {
+      throw new ApiException(10001);
+    }
+
+    // 所有用户初始密码为123456
+    await this.entityManager.transaction(async (manage) => {
+      const salt = await this.util.generateRandomValue(32);
+
+      const password = this.util.md5(`123456${salt}`)
+      const u = manage.create(SysUser, {
+        departmentId: param.departmentId,
+        username: param.username,
+        password,
+        name: param.name,
+        nickName: param.nickName,
+        email: param.email,
+        phone: param.phone,
+        remark: param.remark,
+        status: param.status,
+        psalt: salt,
+      });
+      const result = await manage.save(u);
+
+      const { roles } = param;
+      const insertRoles = roles.map((e) => {
+        return {
+          roleId: e,
+          userId: result.id,
+        };
+      });
+
+      // 分配角色
+      await manage.insert(SysUserRole, insertRoles);
+    });
+  }
 
   async info(id: number) {
     const user: SysUser = await this.userRepository.findOne({ where: { id } });

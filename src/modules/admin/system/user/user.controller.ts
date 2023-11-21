@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Post, Query } from '@nestjs/common';
 import { ApiOkResponse, ApiOperation, ApiSecurity, ApiTags } from '@nestjs/swagger';
 import {
-  // CreateUserDto,
+  CreateUserDto,
   // DeleteUserDto,
   InfoUserDto,
   PageSearchUserDto,
@@ -18,6 +18,14 @@ import { SysUserService } from './user.service';
 @Controller('user')
 export class SysUserController {
   constructor(private userService: SysUserService) {}
+
+  @ApiOperation({
+    summary: '新增管理员',
+  })
+  @Post('add')
+  async add(@Body() dto: CreateUserDto) {
+    await this.userService.add(dto);
+  }
 
   @ApiOperation({
     summary: '查询管理员信息',
