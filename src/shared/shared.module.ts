@@ -2,6 +2,9 @@ import { HttpModule } from '@nestjs/axios';
 import { Global, Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
+import { UtilService } from './services/util.service';
+
+const providers = [UtilService]
 /**
  * 全局共享模块
  */
@@ -29,6 +32,7 @@ import { JwtModule } from '@nestjs/jwt';
       inject: [ConfigService],
     }),
   ],
-  exports: [HttpModule, JwtModule],
+  providers: [...providers],
+  exports: [HttpModule, JwtModule, ...providers],
 })
 export class SharedModule {}

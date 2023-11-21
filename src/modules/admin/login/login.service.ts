@@ -7,11 +7,14 @@ import { ApiException } from '@/common/exceptions/api.exception';
 import { SysUserService } from '../system/user/user.service';
 import SysUser from '@/entities/admin/sys_user.entity';
 import { compare, hash } from 'bcrypt';
+import { UtilService } from '@/shared/services/util.service';
 
 @Injectable()
 export class LoginService {
   constructor(
     private userService: SysUserService,
+
+    private util: UtilService,
 
     private jwtService: JwtService,
   ) {}
@@ -82,8 +85,11 @@ export class LoginService {
     }
 
     // 密码比对
-
-    // 获取菜单
+    const comparePassword = this.util.md5(`${password}${user.psalt}`)
+    if (user.password !== comparePassword) {
+      throw new ApiException(10003);
+    }
+    // 获取菜单 todo
 
     return this.getToken(user)
   }
