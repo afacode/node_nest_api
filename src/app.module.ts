@@ -1,10 +1,7 @@
 import { MiddlewareConsumer, Module, RequestMethod } from '@nestjs/common';
-import { UserModule } from './api/user/user.module';
 import { UploadModule } from './plugins/upload/upload.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { AccountModule } from './api/account/account.module';
-import { LoginModule } from './api/login/login.module';
 import { RedisModule } from './plugins/redis/redis.module';
 import {ConfigurationKeyPaths, getConfiguration} from './config'
 import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
@@ -91,10 +88,7 @@ import { SharedModule } from './shared/shared.module';
       ],
     }),
     ScheduleModule.forRoot(),
-    // UserModule,
     // UploadModule,
-    // AccountModule,
-    // LoginModule,
     // RedisModule,
     // WsModule,
     // CoreModule,
