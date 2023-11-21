@@ -25,7 +25,7 @@ export class LoginController {
   @Authorize()
   async login(
     @Body() dto: LoginInfoDto,
-    // @Req() req: FastifyRequest,
+    // @Req() req: Request,
     @Headers('user-agent') ua: string,
   ): Promise<LoginToken> {
     await this.loginService.checkImgCaptcha(dto.captchaId, dto.verifyCode);

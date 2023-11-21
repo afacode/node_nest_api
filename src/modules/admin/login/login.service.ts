@@ -26,10 +26,12 @@ export class LoginService {
     return '1';
   }
 
+  // redis connect test
   async redisTest() {
-     await this.redisService.set('key', 'afacode')
-     const value = await this.redisService.get(`key`);
-     return value;
+    return await this.redisService.getAllKeys();
+    //  await this.redisService.set('key', 'afacode')
+    //  const value = await this.redisService.get(`key`);
+    //  return value;
   }
 
   /**
@@ -50,15 +52,12 @@ export class LoginService {
       img: `data:image/svg+xml;base64,${Buffer.from(svg.data).toString(
         'base64',
       )}`,
-      id: Date.now(), // this.utils.generateUUID()
+      id: this.util.generateUUID(),
     };
 
     // 5分钟过期时间
-    // await this.redisService
-    //   .getRedis()
-    //   .set(`admin:captcha:img:${result.id}`, svg.text, 'EX', 60 * 5);
-    // return result;
-
+    await this.redisService.set(`admin:captcha:img:${result.id}`, svg.text, 60 * 5);
+    
     return result
   }
 
@@ -66,15 +65,12 @@ export class LoginService {
    * 校验验证码
    */
   async checkImgCaptcha(id: string, code: string) {
-    return true;
-    // const result = await this.redisService
-    //   .getRedis()
-    //   .get(`admin:captcha:img:${id}`);
-    // if (isEmpty(result) || code.toLowerCase() !== result.toLowerCase()) {
-    //   throw new ApiException(10002);
-    // }
-    // // 校验成功后移除验证码
-    // await this.redisService.getRedis().del(`admin:captcha:img:${id}`);
+    const getCode = await this.redisService.get(`admin:captcha:img:${id}`);
+    if (isEmpty(getCode) || code.toLowerCase() !== getCode.toLowerCase()) {
+      throw new ApiException(10002);
+    }
+    // 校验成功后移除验证码
+    await this.redisService.del(`admin:captcha:img:${id}`);
   }
 
   /**
