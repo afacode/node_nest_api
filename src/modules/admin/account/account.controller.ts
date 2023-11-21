@@ -6,6 +6,7 @@ import { SysUserService } from '../system/user/user.service';
 import { UtilService } from '@/shared/services/util.service';
 import { AdminUser } from '../adminCore/decorators/admin-user.decorator';
 import { PermissionOptional } from '../adminCore/decorators/permission-optional.decorator';
+import { Request } from 'express';
 
 @ApiTags('账户模块')
 @ApiSecurity(ADMIN_PREFIX)
@@ -14,14 +15,15 @@ export class AccountController {
   constructor(
     private userService: SysUserService,
     private loginService: LoginService,
-    private utils: UtilService,
+    private util: UtilService,
   ) {}
   
   @ApiOperation({ summary: '获取管理员资料' })
   @PermissionOptional()
   @Get('info')
-  async info() {
-    return { name: 'afacode' };
+  async info(@AdminUser() user: {uid: number}, @Req() req: Request) {
+    const rest = await this.userService.getAccountInfo(user.uid, this.util.getReqIP(req),)
+    return rest;
   }
 
   @ApiOperation({ summary: '获取菜单列表及权限列表' })

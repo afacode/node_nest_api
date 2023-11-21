@@ -121,4 +121,26 @@ export class SysUserService {
       },
     });
   }
+
+  async getAccountInfo(userId: number, ip?: string) {
+    const user: SysUser = await this.userRepository.findOne({
+      where: {
+        id: userId,
+      },
+    });
+
+    if (isEmpty(user)) {
+      throw new ApiException(10017);
+    }
+
+    return {
+      name: user.name,
+      nickName: user.nickName,
+      email: user.email,
+      phone: user.phone,
+      remark: user.remark,
+      headImg: user.headImg,
+      loginIp: ip,
+    };
+  }
 }
