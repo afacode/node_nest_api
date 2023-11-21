@@ -37,4 +37,11 @@ export class LoginController {
     );
     return { token };
   }
+
+  @ApiOperation({ summary: 'redis test' })
+  @Get('redis')
+  @Authorize()
+  async test() {
+    return await this.loginService.redisTest();
+  }
 }

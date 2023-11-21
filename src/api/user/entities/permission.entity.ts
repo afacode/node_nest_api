@@ -1,4 +1,4 @@
-import { BaseModelWithUUIDPrimary } from 'src/shared/model/base.model';
+import { BaseModelWithUUIDPrimary } from '@/entities/base.model';
 import { Column, Entity } from 'typeorm';
 
 @Entity({ name: 'permissions' })

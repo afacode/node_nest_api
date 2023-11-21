@@ -3,7 +3,7 @@ import { RedisService } from './redis.service';
 import { createClient } from 'redis';
 
 // docker run --name redis -d -p 6379:6379 redis:6.0
-@Global()
+// @Global()
 @Module({
   providers: [
     RedisService,

@@ -9,10 +9,13 @@ import SysUser from '@/entities/admin/sys_user.entity';
 import { compare, hash } from 'bcrypt';
 import { UtilService } from '@/shared/services/util.service';
 import { SysMenuService } from '../system/menu/menu.service';
+import { RedisService } from '@/shared/redis/redis.service';
 
 @Injectable()
 export class LoginService {
   constructor(
+    private redisService: RedisService,
+
     private userService: SysUserService,
     private menuService: SysMenuService,
     private util: UtilService,
@@ -21,6 +24,12 @@ export class LoginService {
 
   async getRedisPermsById(id: number) {
     return '1';
+  }
+
+  async redisTest() {
+     await this.redisService.set('key', 'afacode')
+     const value = await this.redisService.get(`key`);
+     return value;
   }
 
   /**

@@ -5,7 +5,7 @@ import { In, Repository } from 'typeorm';
 import { hash, compare } from 'bcrypt';
 import { ConfigService } from '@nestjs/config';
 import { RegisterUserDto, UserLoginDto } from './dto/index.dto';
-import { RedisService } from 'src/plugins/redis/redis.service';
+import { RedisService } from '@/shared/redis/redis.service';
 import { Role } from './entities/role.entity';
 import { Permission } from './entities/permission.entity';
 import { JwtService } from '@nestjs/jwt';

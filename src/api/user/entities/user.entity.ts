@@ -1,4 +1,4 @@
-import { BaseModelWithUUIDPrimary } from 'src/shared/model/base.model';
+import { BaseModelWithUUIDPrimary } from '@/entities/base.model';
 import { Column, Entity, JoinTable, ManyToMany } from 'typeorm';
 import { Role } from './role.entity';
 

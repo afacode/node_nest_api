@@ -3,6 +3,7 @@ import { Global, Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { UtilService } from './services/util.service';
+import { RedisModule } from './redis/redis.module';
 
 const providers = [UtilService]
 /**
@@ -31,8 +32,9 @@ const providers = [UtilService]
       },
       inject: [ConfigService],
     }),
+    RedisModule,
   ],
   providers: [...providers],
-  exports: [HttpModule, JwtModule, ...providers],
+  exports: [HttpModule, JwtModule, RedisModule, ...providers],
 })
 export class SharedModule {}
