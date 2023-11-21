@@ -21,17 +21,11 @@ import { LoginService } from '../../login/login.service';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
-  @Inject(JwtService)
-  private jwtService: JwtService;
-
-  @Inject(UserService)
-  private userService: UserService;
-
-  @Inject(LoginService)
-  private loginService: LoginService;
-
-  @Inject(Reflector)
-  private reflector: Reflector;
+  constructor(
+    private loginService: LoginService,
+    private reflector: Reflector,
+    private jwtService: JwtService,
+  ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     // 检测是否是开放类型的，例如获取验证码类型的接口不需要校验，可以加入@Authorize可自动放过

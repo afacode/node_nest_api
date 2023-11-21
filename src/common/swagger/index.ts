@@ -1,3 +1,4 @@
+import { ADMIN_PREFIX } from '@/modules/admin/admin.constants';
 import { INestApplication } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
@@ -15,6 +16,11 @@ export function setupSwagger(app: INestApplication): void {
   const options = new DocumentBuilder()
     .setTitle(configService.get<string>('swagger.title'))
     .setDescription(configService.get<string>('swagger.desc'))
+    .addSecurity(ADMIN_PREFIX, {
+      type: 'apiKey',
+      in: 'header',
+      name: 'Authorization'
+    })
     .setVersion('1.0')
     .addTag('1.0')
     .build();

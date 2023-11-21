@@ -6,7 +6,6 @@ import * as svgCaptcha from 'svg-captcha';
 import { ApiException } from '@/common/exceptions/api.exception';
 import { SysUserService } from '../system/user/user.service';
 import SysUser from '@/entities/admin/sys_user.entity';
-import { compare, hash } from 'bcrypt';
 import { UtilService } from '@/shared/services/util.service';
 import { SysMenuService } from '../system/menu/menu.service';
 import { RedisService } from '@/shared/redis/redis.service';
@@ -22,16 +21,9 @@ export class LoginService {
     private jwtService: JwtService,
   ) {}
 
-  async getRedisPermsById(id: number) {
-    return '1';
-  }
-
   // redis connect test
   async redisTest() {
     return await this.redisService.getAllKeys();
-    //  await this.redisService.set('key', 'afacode')
-    //  const value = await this.redisService.get(`key`);
-    //  return value;
   }
 
   /**
@@ -120,4 +112,15 @@ export class LoginService {
     return { menus, perms };
   }
 
+  async getRedisPasswordVersionById(id: number): Promise<string> {
+    return this.redisService.get(`admin:passwordVersion:${id}`);
+  }
+
+  async getRedisTokenById(id: number): Promise<string> {
+    return this.redisService.get(`admin:token:${id}`);
+  }
+
+  async getRedisPermsById(id: number) {
+    return await this.redisService.get(`admin:perms:${id}`)
+  }
 }

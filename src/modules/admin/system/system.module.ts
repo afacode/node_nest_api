@@ -19,6 +19,8 @@ import { SysRoleController } from './role/role.controller';
 import { SysRoleService } from './role/role.service';
 import { SysDeptController } from './dept/dept.controller';
 import { SysDeptService } from './dept/dept.service';
+import { ROOT_ROLE_ID } from '../admin.constants';
+import { rootRoleIdProvider } from '../adminCore/provider/root-role-id.provider';
 
 
 const providers = [
@@ -51,9 +53,11 @@ const providers = [
     SysDeptController,
   ],
   providers: [
+    rootRoleIdProvider(),
     ...providers
   ],
   exports: [
+    ROOT_ROLE_ID,
     TypeOrmModule,
     ...providers
   ],

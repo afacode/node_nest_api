@@ -18,9 +18,11 @@ async function bootstrap() {
     prefix: '/public',
   });
 
+  app.setGlobalPrefix('api');
+
   // cors
-  app.use(cors());
-  // app.enableCors();
+  // app.use(cors());
+  app.enableCors();
 
   // 全局pipe validate
   app.useGlobalPipes(

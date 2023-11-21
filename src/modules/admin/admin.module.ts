@@ -1,9 +1,10 @@
 import { Module } from '@nestjs/common';
 import { AccountModule } from './account/account.module';
-import { RouterModule } from '@nestjs/core';
+import { APP_GUARD, RouterModule } from '@nestjs/core';
 import { ADMIN_PREFIX } from './admin.constants';
 import { LoginModule } from './login/login.module';
 import { SystemModule } from './system/system.module';
+import { AuthGuard } from './adminCore/guard/auth.guard';
 
 @Module({
   imports: [
@@ -24,7 +25,12 @@ import { SystemModule } from './system/system.module';
     AccountModule,
     LoginModule,
   ],
-  providers: [],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: AuthGuard,
+    }
+  ],
   exports: [SystemModule],
 })
 export class AdminModule {}
