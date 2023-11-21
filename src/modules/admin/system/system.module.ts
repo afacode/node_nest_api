@@ -17,7 +17,16 @@ import { SysMenuController } from './menu/menu.controller';
 import { SysMenuService } from './menu/menu.service';
 import { SysRoleController } from './role/role.controller';
 import { SysRoleService } from './role/role.service';
+import { SysDeptController } from './dept/dept.controller';
+import { SysDeptService } from './dept/dept.service';
 
+
+const providers = [
+  SysUserService,
+  SysMenuService,
+  SysRoleService,
+  SysDeptService,
+];
 @Module({
   imports: [
     TypeOrmModule.forFeature([
@@ -39,17 +48,14 @@ import { SysRoleService } from './role/role.service';
     SysUserController,
     SysMenuController,
     SysRoleController,
+    SysDeptController,
   ],
   providers: [
-    SysUserService,
-    SysMenuService,
-    SysRoleService,
+    ...providers
   ],
   exports: [
     TypeOrmModule,
-    SysUserService,
-    SysMenuService,
-    SysRoleService,
+    ...providers
   ],
 })
 export class SystemModule {}
