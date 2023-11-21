@@ -8,14 +8,14 @@ import { SysUserService } from '../system/user/user.service';
 import SysUser from '@/entities/admin/sys_user.entity';
 import { compare, hash } from 'bcrypt';
 import { UtilService } from '@/shared/services/util.service';
+import { SysMenuService } from '../system/menu/menu.service';
 
 @Injectable()
 export class LoginService {
   constructor(
     private userService: SysUserService,
-
+    private menuService: SysMenuService,
     private util: UtilService,
-
     private jwtService: JwtService,
   ) {}
 
@@ -105,13 +105,14 @@ export class LoginService {
       },
     );
   }
-  
-  private async getPasswordhash(password: string): Promise<string> {
-    return await hash(password, 10);
-  }
 
-  private async comparePassword(password: string, sqlPassword: string) {
-    return await compare(password, sqlPassword);
+  /**
+   * 获取权限菜单
+   */
+  async getPermMenu(userId: number) {
+    const menus = await this.menuService.getMenus(userId);
+    const perms = await this.menuService.getPerms(userId);
+    return { menus, perms };
   }
 
 }
