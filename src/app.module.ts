@@ -68,8 +68,10 @@ import { SharedModule } from './shared/shared.module';
             winston.format.ms(),
             utilities.format.nestLike(),
           ),
+          level: 'error',
           // silent: process.env.NODE_ENV === 'production'
         }),
+        // new winston.transports.File({ filename: 'error.log', level: 'error' }),
         new DailyRotateFile({
           dirname: `logs`, // 日志保存的目录
           filename: '%DATE%.log', // 日志名称，占位符 %DATE% 取值为 datePattern 值。

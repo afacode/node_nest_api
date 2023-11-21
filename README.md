@@ -1,5 +1,10 @@
 ## Description
-基于 NestJs + TypeScript + TypeORM + Redis + MySql 一款简单高效的前后端分离的权限管理
+基于 NestJs + TypeScript + TypeORM + Redis + MySql + JWT 一款简单高效的前后端分离的权限管理
+
+修改配置请在.env文件
+
+默认swagger地址
+`/swagger-api`
 
 [Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
 
