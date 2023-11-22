@@ -21,6 +21,8 @@ import { SysDeptController } from './dept/dept.controller';
 import { SysDeptService } from './dept/dept.service';
 import { ROOT_ROLE_ID } from '../admin.constants';
 import { rootRoleIdProvider } from '../adminCore/provider/root-role-id.provider';
+import { SysParamConfigController } from './param-config/param-config.controller';
+import { SysParamConfigService } from './param-config/param-config.service';
 
 
 const providers = [
@@ -28,6 +30,7 @@ const providers = [
   SysMenuService,
   SysRoleService,
   SysDeptService,
+  SysParamConfigService,
 ];
 @Module({
   imports: [
@@ -51,6 +54,7 @@ const providers = [
     SysMenuController,
     SysRoleController,
     SysDeptController,
+    SysParamConfigController,
   ],
   providers: [
     rootRoleIdProvider(),
