@@ -9,7 +9,6 @@ import { Observable } from 'rxjs';
 import { Request } from 'express';
 import { JwtService } from '@nestjs/jwt';
 import { Reflector } from '@nestjs/core';
-import { UserService } from 'src/api/user/user.service';
 import {
   ADMIN_PREFIX,
   ADMIN_USER,

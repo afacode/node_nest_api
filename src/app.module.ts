@@ -4,8 +4,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import {ConfigurationKeyPaths, getConfiguration} from './config'
 import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
-import { LoginGuard } from './guard/login.guard';
-import { PermissionGuard } from './guard/permission.guard';
 import * as winston from 'winston';
 import DailyRotateFile = require('winston-daily-rotate-file');
 import { WinstonModule, utilities } from 'nest-winston';
@@ -101,10 +99,6 @@ import { SharedModule } from './shared/shared.module';
     // {
     //   provide: APP_GUARD,
     //   useClass: LoginGuard, //  全局启用身份验证 配合白名单
-    // },
-    // {
-    //   provide: APP_GUARD,
-    //   useClass: PermissionGuard, //  全局启用身份验证 配合白名单
     // },
     {
       provide: APP_FILTER,
