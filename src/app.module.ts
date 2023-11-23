@@ -10,13 +10,13 @@ import { WinstonModule, utilities } from 'nest-winston';
 import { LoggerMiddleware } from './middleware/logger.middleware';
 import { ResponseInterceptor } from './common/response.interceptor';
 import { HttpFilter } from './common/http.filter';
-import { WsModule } from './ws/ws.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { CoreModule } from './plugins/core/core.module';
 import { ApiTransformInterceptor } from './common/interceptors/api-transform.interceptor';
 import { ApiExceptionFilter } from './common/filters/api-exception.filter';
 import { AdminModule } from './modules/admin/admin.module';
 import { SharedModule } from './shared/shared.module';
+import { WSModule } from './modules/ws/ws.module';
 
 // docker run -e MYSQL_ROOT_PASSWORD=123456 -p 330603306 -d mysql:8
 
@@ -88,7 +88,8 @@ import { SharedModule } from './shared/shared.module';
     }),
     ScheduleModule.forRoot(),
     // UploadModule,
-    // WsModule,
+    // websocket
+    WSModule,
     // CoreModule,
     // custom module
     SharedModule,
