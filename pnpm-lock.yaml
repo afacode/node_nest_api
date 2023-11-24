@@ -42,6 +42,7 @@ specifiers:
   multer: 1.4.5-lts.1
   mysql2: ^3.6.2
   nest-winston: ^1.9.4
+  nestjs-knife4j: ^1.0.1
   prettier: ^3.0.0
   redis: ^4.6.10
   reflect-metadata: ^0.1.13
@@ -88,6 +89,7 @@ dependencies:
   multer: 1.4.5-lts.1
   mysql2: 3.6.2
   nest-winston: 1.9.4_7ovn6fmwayrrzpbes4qu3krwsm
+  nestjs-knife4j: 1.0.1
   redis: 4.6.10
   reflect-metadata: 0.1.13
   rxjs: 7.8.1
@@ -4860,6 +4862,10 @@ packages:
       '@nestjs/common': 10.2.7_j3td4gnlgk75ora6o6suo62byy
       fast-safe-stringify: 2.1.1
       winston: 3.11.0
+    dev: false
+
+  /nestjs-knife4j/1.0.1:
+    resolution: {integrity: sha512-8it3fks9QHNuFt1PzH8m9865zf/sT1nMjF4EkJecHYsbZgf25yU7PIa8mpYPDayXODPTHnUa6a6mxZGYX3w2QQ==}
     dev: false
 
   /node-abort-controller/3.1.1:
