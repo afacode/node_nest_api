@@ -1,6 +1,10 @@
 ## Description
 基于 NestJs + TypeScript + TypeORM + Redis + MySql + JWT 一款简单高效的前后端分离的权限管理
 
+- 日志: winston
+- API管理工具: knife4+swagger
+- socket: websocket
+
 修改配置请在.env文件
 
 默认swagger地址
