@@ -52,6 +52,7 @@ specifiers:
   supertest: ^6.3.3
   svg-captcha: ^1.4.0
   swagger-ui-express: ^5.0.0
+  systeminformation: ^5.21.17
   ts-jest: ^29.1.0
   ts-loader: ^9.4.3
   ts-node: ^10.9.1
@@ -96,6 +97,7 @@ dependencies:
   socket.io: 4.7.2
   svg-captcha: 1.4.0
   swagger-ui-express: 5.0.0
+  systeminformation: 5.21.17
   typeorm: 0.3.17_6wpzbrspuzfgsz3aftog5d74le
   uuid: 9.0.1
   winston: 3.11.0
@@ -5815,6 +5817,13 @@ packages:
       '@pkgr/utils': 2.4.2
       tslib: 2.6.2
     dev: true
+
+  /systeminformation/5.21.17:
+    resolution: {integrity: sha512-JZYRCbIjk3WuBV59A9/rTla2rROX+aAJ9uo2Z1dI+bjieORcukClN8rlM1zE9NYKpULSbaGc+KKct/870lO0DA==}
+    engines: {node: '>=8.0.0'}
+    os: [darwin, linux, win32, freebsd, openbsd, netbsd, sunos, android]
+    hasBin: true
+    dev: false
 
   /tapable/2.2.1:
     resolution: {integrity: sha512-GNzQvQTOIP6RyTfE2Qxb8ZVlNmw0n88vp1szwWRimP02mnTsx3Wtn5qRdqY9w2XduFNUgvOwhNnQsjwCp+kqaQ==}

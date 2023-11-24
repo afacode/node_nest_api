@@ -88,6 +88,7 @@ export class LoginService {
     }
 
     const perms = await this.menuService.getPerms(user.id);
+    console.log('redis set perms', perms);
     const jwtSign = this.getToken(user);
 
     // token过期时间 24小时
@@ -126,6 +127,7 @@ export class LoginService {
   }
 
   async getRedisPermsById(id: number) {
-    return await this.redisService.get(`admin:perms:${id}`)
+    const perms = await this.redisService.get(`admin:perms:${id}`);
+    return perms
   }
 }

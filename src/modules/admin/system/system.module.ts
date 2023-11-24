@@ -26,6 +26,8 @@ import { SysParamConfigService } from './param-config/param-config.service';
 import { SysOnlineController } from './online/online.controller';
 import { SysOnlineService } from './online/online.service';
 import { WSModule } from '@/modules/ws/ws.module';
+import { SysServeController } from './serve/serve.controller';
+import { SysServeService } from './serve/serve.service';
 
 
 const providers = [
@@ -35,6 +37,7 @@ const providers = [
   SysDeptService,
   SysParamConfigService,
   SysOnlineService,
+  SysServeService,
 ];
 @Module({
   imports: [
@@ -61,6 +64,7 @@ const providers = [
     SysDeptController,
     SysParamConfigController,
     SysOnlineController,
+    SysServeController,
   ],
   providers: [
     rootRoleIdProvider(),

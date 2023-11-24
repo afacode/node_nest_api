@@ -63,13 +63,12 @@ export class SysMenuService {
       .andWhere('menu.type = 2')
       .andWhere('menu.perms IS NOT NULL')
       .getMany();
-      
-      if (!isEmpty(result)) {
-        result.forEach((e) => {
-          perms = concat(perms, e.perms.split(','));
-        });
-        perms = uniq(perms);
-      }
+    }
+    if (!isEmpty(result)) {
+      result.forEach((e) => {
+        perms = concat(perms, e.perms.split(','));
+      });
+      perms = uniq(perms);
     }
     return perms;
   }

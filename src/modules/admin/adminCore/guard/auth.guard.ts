@@ -72,13 +72,16 @@ export class AuthGuard implements CanActivate {
       throw new ApiException(11001);
     }
 
+    const array = JSON.parse(perms) as string[];
     // 将sys:admin:user等转换成sys/admin/user
     const permArray: string[] = (JSON.parse(perms) as string[]).map((e) => {
       return e.replace(/:/g, '/');
     });
-
+    console.log('perms[0]: ', array[0], 'permArray:', permArray[0]); // "sys:user:add"
+    console.log('path: ', path, path.replace(`/${ADMIN_PREFIX}/`, '/')); // /api/admin/sys/user/page /apisys/user/page  admin
     // 遍历权限是否包含该url，不包含则无访问权限
-    if (!permArray.includes(path.replace(`/${ADMIN_PREFIX}/`, ''))) {
+    const replaceUrl = `/api/${ADMIN_PREFIX}/`;
+    if (!permArray.includes(path.replace(`${replaceUrl}`, ''))) {
       throw new ApiException(11003);
     }
 

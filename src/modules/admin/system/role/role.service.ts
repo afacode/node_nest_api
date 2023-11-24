@@ -64,7 +64,7 @@ export class SysRoleService {
   /**
    * 根据用户id查找角色信息
    */
-  async getRoleIdsByUserId(userId: number) {
+  async getRoleIdsByUserId(userId: number): Promise<number[]> {
     const result = await this.userRoleRepository.find({ where: { userId: userId } });
     if (!isEmpty(result)) {
       return map(result, (v) => {
