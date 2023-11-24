@@ -14,6 +14,7 @@ import SysUserRole from '@/entities/admin/sys_user_role.emtity';
 import { ApiException } from '@/common/exceptions/api.exception';
 import { CreateUserDto } from './user.dto';
 import { UtilService } from '@/shared/services/util.service';
+import { ROOT_ROLE_ID } from '../../admin.constants';
 
 @Injectable()
 export class SysUserService {
@@ -27,6 +28,7 @@ export class SysUserService {
     private userRoleRepository: Repository<SysUserRole>,
 
     @InjectEntityManager() private entityManager: EntityManager,
+    @Inject(ROOT_ROLE_ID) private rootRoleId: number,
 
     private util: UtilService,
   ) {}
@@ -143,4 +145,14 @@ export class SysUserService {
       loginIp: ip,
     };
   }
+
+  /**
+  * 查找超管的用户ID
+  */
+ async findRootUserId(): Promise<number> {
+   const result = await this.userRoleRepository.findOne({
+     where: { id: this.rootRoleId },
+   });
+   return result.userId;
+ }
 }

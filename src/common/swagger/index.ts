@@ -3,7 +3,7 @@ import { INestApplication } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ConfigurationKeyPaths } from 'src/config';
-import { knife4jSetup as knife4Setup} from 'nestjs-knife4j';
+import { knife4jSetup } from 'nestjs-knife4j';
 
 export function setupSwagger(app: INestApplication): void {
   const configService: ConfigService<ConfigurationKeyPaths> = app.get(ConfigService);
@@ -28,7 +28,7 @@ export function setupSwagger(app: INestApplication): void {
   const document = SwaggerModule.createDocument(app, options);
   SwaggerModule.setup(configService.get<string>('swagger.path', '/swagger-api'), app, document);
 
-  knife4Setup(app, {
+  knife4jSetup(app, {
     urls: [
       {
         name: '1.0版本',

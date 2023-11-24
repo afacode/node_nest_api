@@ -23,6 +23,9 @@ import { ROOT_ROLE_ID } from '../admin.constants';
 import { rootRoleIdProvider } from '../adminCore/provider/root-role-id.provider';
 import { SysParamConfigController } from './param-config/param-config.controller';
 import { SysParamConfigService } from './param-config/param-config.service';
+import { SysOnlineController } from './online/online.controller';
+import { SysOnlineService } from './online/online.service';
+import { WSModule } from '@/modules/ws/ws.module';
 
 
 const providers = [
@@ -31,6 +34,7 @@ const providers = [
   SysRoleService,
   SysDeptService,
   SysParamConfigService,
+  SysOnlineService,
 ];
 @Module({
   imports: [
@@ -48,6 +52,7 @@ const providers = [
       SysTaskLog,
       SysConfig,
     ]),
+    WSModule,
   ],
   controllers: [
     SysUserController,
@@ -55,6 +60,7 @@ const providers = [
     SysRoleController,
     SysDeptController,
     SysParamConfigController,
+    SysOnlineController,
   ],
   providers: [
     rootRoleIdProvider(),
