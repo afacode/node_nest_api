@@ -26,17 +26,18 @@ export function setupSwagger(app: INestApplication): void {
     .addTag('1.0')
     .build();
   const document = SwaggerModule.createDocument(app, options);
-  SwaggerModule.setup(configService.get<string>('swagger.path', '/swagger-api'), app, document);
+  const swaggerPath = configService.get<string>('swagger.path', '/swagger-api')
+  SwaggerModule.setup(swaggerPath, app, document);
 
   knife4jSetup(app, {
     urls: [
       {
         name: '1.0版本',
-        url: `/api-json`,
+        url: `/${swaggerPath}-json`,
         swaggerVersion: '3.0',
-        location: `/api-json`,
+        location: `/${swaggerPath}-json`,
       },
     ]
-  })
+  });
 }
 
