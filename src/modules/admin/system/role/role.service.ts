@@ -31,7 +31,7 @@ export class SysRoleService {
    * 获取所有角色
    */
   async list() {
-    return await this.roleRepository.find();
+    return await this.roleRepository.findAndCount();
   }
 
   /**

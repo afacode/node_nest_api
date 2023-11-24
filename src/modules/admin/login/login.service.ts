@@ -86,9 +86,14 @@ export class LoginService {
     if (user.password !== comparePassword) {
       throw new ApiException(10003);
     }
-    // 获取菜单 todo
 
-    return this.getToken(user)
+    const perms = await this.menuService.getPerms(user.id);
+    const jwtSign = this.getToken(user);
+
+    // token过期时间 24小时
+    await this.redisService.set(`admin:token:${user.id}`, jwtSign,  60 * 60 * 24);
+    await this.redisService.set(`admin:perms:${user.id}`, JSON.stringify(perms));
+    return jwtSign;
   }
 
   getToken(user: SysUser) {
@@ -97,9 +102,9 @@ export class LoginService {
         uid: parseInt(user.id.toString()),
         username: user.username,
       },
-      {
-        expiresIn: '1d',
-      },
+      // {
+      //   expiresIn: '1d',
+      // },
     );
   }
 

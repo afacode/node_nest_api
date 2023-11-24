@@ -1,5 +1,6 @@
 export const getConfiguration = () => ({
   port: parseInt(process.env.PORT, 10) || 3000,
+  wsPort: parseInt(process.env.WS_PORT, 10) || 3000,
   TEST_ENV: process.env.TEST_ENV,
   jwtSecret: process.env.JWT_SECRET,
 

@@ -40,19 +40,15 @@ export class SysUserController {
     summary: '分页获取管理员列表',
   })
   @Post('page')
-  async page(
-    @Body() dto: PageSearchUserDto,
-    @AdminUser() user,
-  ) {
-    return {name: '分页获取管理员列表'}
-    // const [list, total] = await this.userService.page(user.uid, dto);
-    // return {
-    //     list,
-    //     pagination: {
-    //       total,
-    //       page: dto.page,
-    //       size: dto.limit,
-    //     },
-    //   };
+  async page(@Body() dto: PageSearchUserDto, @AdminUser() user) {
+    const [list, total] = await this.userService.page(user.uid, dto);
+    return {
+      list,
+      pagination: {
+        total,
+        page: dto.page,
+        size: dto.limit,
+      },
+    };
   }
 }

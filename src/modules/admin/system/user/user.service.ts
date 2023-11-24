@@ -12,9 +12,10 @@ import { EntityManager, Repository } from 'typeorm';
 import SysDepartment from '@/entities/admin/sys_department.entity';
 import SysUserRole from '@/entities/admin/sys_user_role.emtity';
 import { ApiException } from '@/common/exceptions/api.exception';
-import { CreateUserDto } from './user.dto';
+import { CreateUserDto, PageSearchUserDto } from './user.dto';
 import { UtilService } from '@/shared/services/util.service';
 import { ROOT_ROLE_ID } from '../../admin.constants';
+import { PageSearchUserInfo } from './user.class';
 
 @Injectable()
 export class SysUserService {
@@ -40,7 +41,7 @@ export class SysUserService {
   async add(param: CreateUserDto): Promise<void> {
     const exists = await this.userRepository.findOne({
       where: {
-        username: param.username
+        username: param.username,
       },
     });
     if (!isEmpty(exists)) {
@@ -51,7 +52,7 @@ export class SysUserService {
     await this.entityManager.transaction(async (manage) => {
       const salt = await this.util.generateRandomValue(32);
 
-      const password = this.util.md5(`123456${salt}`)
+      const password = this.util.md5(`123456${salt}`);
       const u = manage.create(SysUser, {
         departmentId: param.departmentId,
         username: param.username,
@@ -110,7 +111,45 @@ export class SysUserService {
     return { ...user, roles, departmentName: departmentRow.name };
   }
 
-  async page() {}
+  async page(uid: number, params: PageSearchUserDto) {
+    const { departmentIds, limit, page, name, username, phone, remark } = params;
+    const queryAll: boolean = isEmpty(departmentIds);
+    const rootUserId = await this.findRootUserId();
+
+    const qb = this.userRepository
+      .createQueryBuilder('user')
+      .innerJoinAndSelect('sys_department', 'dept', 'dept.id = user.departmentId')
+      .innerJoinAndSelect('sys_user_role', 'user_role', 'user_role.user_id = user.id')
+      .innerJoinAndSelect('sys_role', 'role', 'role.id = user_role.role_id')
+      .select(['user.id,GROUP_CONCAT(role.name) as roleNames', 'dept.name', 'user.*'])
+      .where('user.id NOT IN (:...ids)', { ids: [rootUserId, uid] })
+      .andWhere(queryAll ? '1 = 1' : 'user.departmentId IN (:...deptIds)', {
+        deptIds: departmentIds,
+      })
+      .andWhere('user.name LIKE :name', { name: `%${name}%` })
+      .andWhere('user.username LIKE :username', { username: `%${username}%` })
+      .andWhere('user.remark LIKE :remark', { remark: `%${remark}%` })
+      .andWhere('user.phone LIKE :phone', { phone: `%${phone}%` })
+      .orderBy('user.updated_at', 'DESC')
+      .groupBy('user.id')
+      .offset((page - 1) * limit)
+      .limit(limit);
+    const [_, total] = await qb.getManyAndCount();
+    const list = await qb.getRawMany();
+
+    const dealResult: PageSearchUserInfo[] = list.map((n) => {
+      const convertData = Object.entries<[string, any]>(n).map(([key, value]) => [
+        camelCase(key),
+        value,
+      ]);
+      return {
+        ...Object.fromEntries(convertData),
+        departmentName: n.dept_name,
+        roleNames: n.roleNames.split(','),
+      };
+    });
+    return [dealResult, total];
+  }
 
   /**
    * 根据用户名查找已经启用的用户
@@ -119,7 +158,7 @@ export class SysUserService {
     return await this.userRepository.findOne({
       where: {
         username,
-        status: 1
+        status: 1,
       },
     });
   }
@@ -147,12 +186,12 @@ export class SysUserService {
   }
 
   /**
-  * 查找超管的用户ID
-  */
- async findRootUserId(): Promise<number> {
-   const result = await this.userRoleRepository.findOne({
-     where: { id: this.rootRoleId },
-   });
-   return result.userId;
- }
+   * 查找超管的用户ID
+   */
+  async findRootUserId(): Promise<number> {
+    const result = await this.userRoleRepository.findOne({
+      where: { id: this.rootRoleId },
+    });
+    return result.userId;
+  }
 }

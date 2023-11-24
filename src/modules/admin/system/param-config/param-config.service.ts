@@ -16,7 +16,7 @@ export class SysParamConfigService {
    * 罗列所有配置
    */
   async getConfigListByPage(page: number, size: number): Promise<SysConfig[]> {
-    const list = this.configRepository.find({
+    const list = await this.configRepository.find({
       // where: {
       //     name: Like(`%${query.keyword}%`),
       //   },

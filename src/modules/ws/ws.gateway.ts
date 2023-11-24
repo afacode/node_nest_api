@@ -13,7 +13,9 @@ import { AuthService } from './auth.service';
  * WebSokcet网关，不含权限校验，Socket端只做通知相关操作
  * 第一个参数可以传递一个端口号，如果不传默认和http监听的端口一样
  */
-@WebSocketGateway({
+@WebSocketGateway(3001, {
+  namespace: 'admin',
+  path: '/ws-api',
   cors: {
     orign: '*',
   },

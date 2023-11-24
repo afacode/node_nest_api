@@ -48,11 +48,15 @@ async function bootstrap() {
   // swagger
   setupSwagger(app);
 
-  const PORT = config.get<number>('SERVE_PORT', 3000);
+  const PORT = config.get<number>('port', 3000);
+  const WS_PORT = config.get<string>('wsPort');
   const SWAGGER_API = config.get<string>('swagger.path');
+
   await app.listen(PORT, () => {
     Logger.log(`api服务已经启动,请访问: http://localhost:${PORT}`);
+    Logger.log(`ws服务已经启动,请访问: http://localhost:${WS_PORT}`);
     Logger.log(`API文档已生成,请访问: http://localhost:${PORT}/${SWAGGER_API}`);
+    Logger.log(`API knife文档已生成,请访问: http://localhost:${PORT}/doc`);
   });
 }
 bootstrap();

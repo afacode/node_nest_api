@@ -7,6 +7,7 @@ import { UtilService } from '@/shared/services/util.service';
 import { AdminUser } from '../adminCore/decorators/admin-user.decorator';
 import { PermissionOptional } from '../adminCore/decorators/permission-optional.decorator';
 import { Request } from 'express';
+import { AccountInfo } from '../system/user/user.class';
 
 @ApiTags('账户模块')
 @ApiSecurity(ADMIN_PREFIX)
@@ -19,6 +20,7 @@ export class AccountController {
   ) {}
   
   @ApiOperation({ summary: '获取管理员资料' })
+  @ApiOkResponse({ type: AccountInfo })
   @PermissionOptional()
   @Get('info')
   async info(@AdminUser() user: {uid: number}, @Req() req: Request) {
