@@ -56,7 +56,7 @@ async function bootstrap() {
     Logger.log(`api服务已经启动,请访问: http://localhost:${PORT}`);
     Logger.log(`ws服务已经启动,请访问: http://localhost:${WS_PORT}`);
     Logger.log(`API文档已生成,请访问: http://localhost:${PORT}/${SWAGGER_API}`);
-    Logger.log(`API knife文档已生成,请访问: http://localhost:${PORT}/doc`);
+    Logger.log(`API knife文档已生成,请访问: http://localhost:${PORT}/doc.html`);
   });
 }
 bootstrap();

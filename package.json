@@ -6,10 +6,10 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
-    "build": "nest build  RUN_ENV=prod",
+    "build": "cross-env RUN_ENV=prod nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
-    "start": "nest start RUN_ENV=dev",
-    "start:dev": "nest start RUN_ENV=dev --watch ",
+    "start": "cross-env NODE_ENV=development RUN_ENV=dev nest start",
+    "start:dev": "cross-env NODE_ENV=development RUN_ENV=dev nest start --watch ",
     "start:debug": "nest start RUN_ENV=dev --debug --watch",
     "start:prod": "node dist/main RUN_ENV=prod",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
