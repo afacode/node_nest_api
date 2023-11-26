@@ -55,6 +55,7 @@ export class SysMenuService {
       result = await this.menuRepository.find({
         where: { perms: Not(IsNull()), type: 2 },
       });
+      // mysql => NOT(IS NULL)
     } else {
       result = await this.menuRepository
       .createQueryBuilder('menu')

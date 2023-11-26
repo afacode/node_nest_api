@@ -49,6 +49,7 @@ export class SysUserService {
     }
 
     // 所有用户初始密码为123456
+    // 在事务中使用自定义存储库  createAndSave
     await this.entityManager.transaction(async (manage) => {
       const salt = await this.util.generateRandomValue(32);
 

@@ -8,7 +8,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-export class BaseModel {
+export abstract class BaseModel {
   @CreateDateColumn({ type: 'timestamp', name: 'created_at' })
   @ApiProperty({name: 'created_at'})
   createdAt: Date;
