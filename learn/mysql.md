@@ -169,18 +169,59 @@ select * from emp where (job,salary) in ( select job, salary from emp where name
 
 select e.*, d.* from (select * from emp where entrydate > '2006-01-01') e left join dept d on e.dept_id = d.id ;
 
-
-
 ```
 
 ### 事务
 
 ```sql
+select @@autocommit;
+set @@autocommit = 0; -- 设置为手动提交
+
+select * from account where name = '张三';
+update account set money = money - 1000 where name = '张三';
+update account set money = money + 1000 where name = '李四';
+
+
+-- 提交事务
+commit;
+
+-- 回滚事务
+rollback ;
+
+
+
+-- 2 
+-- 转账操作 (张三给李四转账1000)
+start transaction ;
+
+-- 1. 查询张三账户余额
+select * from account where name = '张三';
+
+-- 2. 将张三账户余额-1000
+update account set money = money - 1000 where name = '张三';
+
+程序执行报错 ...
+
+-- 3. 将李四账户余额+1000
+update account set money = money + 1000 where name = '李四';
+
+
+-- 提交事务
+commit;
+
+-- 回滚事务
+rollback;
 
 
 
 
+-- 查看事务隔离级别
+select @@transaction_isolation;
 
+-- 设置事务隔离级别
+set session transaction isolation level read uncommitted ;
+
+set session transaction isolation level repeatable read ;
 
 ```
 
