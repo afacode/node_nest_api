@@ -38,6 +38,7 @@ export class SysDeptService {
     let depts: any = [];
 
     // sys_role_department 系统角色部门关系  sys_department 部门
+    // WHERE role_dept.role_id IN (roldIds)
     depts = await this.deptRepositoty
       .createQueryBuilder('dept')
       .innerJoinAndSelect('sys_role_department', 'role_dept', 'dept.id = role_dept.department_id')
