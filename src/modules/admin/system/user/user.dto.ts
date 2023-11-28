@@ -190,3 +190,27 @@ export class CreateUserDto {
   @IsIn([0, 1])
   status: number;
 }
+
+export class UpdateUserDto extends CreateUserDto {
+  @ApiProperty({
+    description: '用户ID',
+  })
+  @IsInt()
+  @Min(0)
+  id: number;
+}
+
+export class PasswordUserDto {
+  @ApiProperty({
+    description: '管理员ID',
+  })
+  @IsInt()
+  @Min(0)
+  userId: number;
+
+  @ApiProperty({
+    description: '更改后的密码',
+  })
+  @Matches(/^[a-z0-9A-Z`~!#%^&*=+\\|{};:'\\",<>/?]+$/)
+  password: string;
+}

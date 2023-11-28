@@ -8,14 +8,15 @@ import { camelCase, isEmpty } from 'lodash';
 //   UpdateUserDto,
 //   UpdateUserInfoDto,
 import SysUser from '@/entities/admin/sys_user.entity';
-import { EntityManager, Repository } from 'typeorm';
+import { EntityManager, In, Repository } from 'typeorm';
 import SysDepartment from '@/entities/admin/sys_department.entity';
 import SysUserRole from '@/entities/admin/sys_user_role.emtity';
 import { ApiException } from '@/common/exceptions/api.exception';
-import { CreateUserDto, PageSearchUserDto } from './user.dto';
+import { CreateUserDto, PageSearchUserDto, UpdateUserDto } from './user.dto';
 import { UtilService } from '@/shared/services/util.service';
 import { ROOT_ROLE_ID } from '../../admin.constants';
 import { PageSearchUserInfo } from './user.class';
+import { RedisService } from '@/shared/redis/redis.service';
 
 @Injectable()
 export class SysUserService {
@@ -31,6 +32,7 @@ export class SysUserService {
     @InjectEntityManager() private entityManager: EntityManager,
     @Inject(ROOT_ROLE_ID) private rootRoleId: number,
 
+    private redisService: RedisService,
     private util: UtilService,
   ) {}
 
@@ -81,6 +83,7 @@ export class SysUserService {
     });
   }
 
+  // 查询管理员信息
   async info(id: number) {
     const user: SysUser = await this.userRepository.findOne({ where: { id } });
     if (isEmpty(user)) {
@@ -110,6 +113,16 @@ export class SysUserService {
     delete user.password;
 
     return { ...user, roles, departmentName: departmentRow.name };
+  }
+
+  // 根据ID列表删除用户
+  async delete(userIds: number[]): Promise<void | never> {
+    const rootUserId = await this.findRootUserId();
+    if (userIds.includes(rootUserId)) {
+      throw new Error('can not delete root user!');
+    }
+    await this.userRepository.delete(userIds);
+    await this.userRoleRepository.delete({ userId: In(userIds) });
   }
 
   async page(uid: number, params: PageSearchUserDto) {
@@ -194,5 +207,28 @@ export class SysUserService {
       where: { id: this.rootRoleId },
     });
     return result.userId;
+  }
+
+  // 更新用户信息
+  async update(param: UpdateUserDto): Promise<void> {}
+
+  // 直接更改管理员密码
+  async forceUpdatePassword(uid: number, password: string): Promise<void> {
+    const user = await this.userRepository.findOne({ where: { id: uid } });
+    if (isEmpty(user)) {
+      throw new ApiException(10017);
+    }
+    const newPassword = this.util.md5(`${password}${user.psalt}`);
+    await this.userRepository.update({ id: uid }, { password: newPassword });
+    await this.upgradePasswordV(user.id);
+  }
+
+  // 升级用户版本密码
+  async upgradePasswordV(id: number): Promise<void> {
+    const v = await this.redisService.get(`admin:passwordVersion:${id}`);
+
+    if (!isEmpty(v)) {
+      await this.redisService.set(`admin:passwordVersion:${id}`, parseInt(v) + 1);
+    }
   }
 }

@@ -2,11 +2,11 @@ import { Body, Controller, Get, Post, Query } from '@nestjs/common';
 import { ApiOkResponse, ApiOperation, ApiSecurity, ApiTags } from '@nestjs/swagger';
 import {
   CreateUserDto,
-  // DeleteUserDto,
+  DeleteUserDto,
   InfoUserDto,
   PageSearchUserDto,
-  // PasswordUserDto,
-  // UpdateUserDto,
+  PasswordUserDto,
+  UpdateUserDto,
   UserDetailInfo,
 } from './user.dto';
 import { ADMIN_PREFIX } from '../../admin.constants';
@@ -37,6 +37,14 @@ export class SysUserController {
   }
 
   @ApiOperation({
+    summary: '根据ID列表删除管理员',
+  })
+  @Post('delete')
+  async delete(@Body() dto: DeleteUserDto) {
+    await this.userService.delete(dto.userIds);
+  }
+
+  @ApiOperation({
     summary: '分页获取管理员列表',
   })
   @Post('page')
@@ -50,5 +58,21 @@ export class SysUserController {
         size: dto.limit,
       },
     };
+  }
+
+  @ApiOperation({
+    summary: '更新管理员信息 todo',
+  })
+  @Post('update')
+  async update(@Body() dto: UpdateUserDto) {
+    await this.userService.update(dto);
+  }
+
+  @ApiOperation({
+    summary: '更改指定管理员密码 todo',
+  })
+  @Post('password')
+  async password(@Body() dto: PasswordUserDto): Promise<void> {
+    await this.userService.forceUpdatePassword(dto.userId, dto.password);
   }
 }
