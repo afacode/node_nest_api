@@ -6,6 +6,7 @@ import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
 import { includes, isEmpty } from 'lodash';
 import { EntityManager, In, Repository } from 'typeorm';
 import { SysRoleService } from '../role/role.service';
+import { ROOT_ROLE_ID } from '../../admin.constants';
 
 @Injectable()
 export class SysDeptService {
@@ -20,6 +21,7 @@ export class SysDeptService {
 
     @InjectEntityManager() private entityManager: EntityManager,
 
+    @Inject(ROOT_ROLE_ID) private rootRoleId: number,
     private roleService: SysRoleService,
   ) {}
 
@@ -37,14 +39,18 @@ export class SysDeptService {
     const roleIds = await this.roleService.getRoleIdsByUserId(userId);
     let depts: any = [];
 
-    // sys_role_department 系统角色部门关系  sys_department 部门
-    // WHERE role_dept.role_id IN (roldIds)
-    depts = await this.deptRepositoty
-      .createQueryBuilder('dept')
-      .innerJoinAndSelect('sys_role_department', 'role_dept', 'dept.id = role_dept.department_id')
-      .andWhere('role_dept.role_id IN (:...roldIds)', { roldIds: roleIds })
-      .orderBy('dept.order_num', 'ASC')
-      .getMany();
+    if (includes(roleIds, this.rootRoleId)) {
+      depts = await this.deptRepositoty.find();
+    } else {
+      // sys_role_department 系统角色部门关系  sys_department 部门
+      // WHERE role_dept.role_id IN (roldIds)
+      depts = await this.deptRepositoty
+        .createQueryBuilder('dept')
+        .innerJoinAndSelect('sys_role_department', 'role_dept', 'dept.id = role_dept.department_id')
+        .andWhere('role_dept.role_id IN (:...roldIds)', { roldIds: roleIds })
+        .orderBy('dept.order_num', 'ASC')
+        .getMany();
+    }
 
     return depts;
   }
