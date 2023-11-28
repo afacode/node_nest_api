@@ -10,6 +10,9 @@
 默认swagger地址
 `/swagger-api`
 
+默认knife地址
+`/doc.html`
+
 [Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
 
 ## 安装
