@@ -214,3 +214,54 @@ export class PasswordUserDto {
   @Matches(/^[a-z0-9A-Z`~!#%^&*=+\\|{};:'\\",<>/?]+$/)
   password: string;
 }
+
+export class UpdateUserInfoDto {
+  @ApiProperty({
+    required: false,
+    description: '用户呢称',
+  })
+  @IsString()
+  @IsOptional()
+  nickName: string;
+
+  @ApiProperty({
+    required: false,
+    description: '用户邮箱',
+  })
+  @IsEmail()
+  @ValidateIf((o) => !isEmpty(o.email))
+  email: string;
+
+  @ApiProperty({
+    required: false,
+    description: '用户手机号',
+  })
+  @IsString()
+  @IsOptional()
+  phone: string;
+
+  @ApiProperty({
+    required: false,
+    description: '用户备注',
+  })
+  @IsString()
+  @IsOptional()
+  remark: string;
+}
+
+export class UpdatePasswordDto {
+  @ApiProperty({
+    description: '更改前的密码',
+  })
+  @IsString()
+  @MinLength(6)
+  @Matches(/^[a-z0-9A-Z`~!#%^&*=+\\|{};:'\\",<>/?]+$/)
+  originPassword: string;
+
+  @ApiProperty({
+    description: '更改后的密码',
+  })
+  @MinLength(6)
+  @Matches(/^[a-z0-9A-Z`~!#%^&*=+\\|{};:'\\",<>/?]+$/)
+  newPassword: string;
+}

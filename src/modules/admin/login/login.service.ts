@@ -9,6 +9,7 @@ import SysUser from '@/entities/admin/sys_user.entity';
 import { UtilService } from '@/shared/services/util.service';
 import { SysMenuService } from '../system/menu/menu.service';
 import { RedisService } from '@/shared/redis/redis.service';
+import { SysLogService } from '../system/log/log.service';
 
 @Injectable()
 export class LoginService {
@@ -19,6 +20,7 @@ export class LoginService {
     private menuService: SysMenuService,
     private util: UtilService,
     private jwtService: JwtService,
+    private logService: SysLogService,
   ) {}
 
   // redis connect test
@@ -73,7 +75,7 @@ export class LoginService {
   async getLoginSign(
     username: string,
     password: string,
-    // ip: string,
+    ip: string,
     ua: string,
   ) {
     const user: SysUser = await this.userService.findUserByUserName(username);
@@ -89,24 +91,36 @@ export class LoginService {
 
     const perms = await this.menuService.getPerms(user.id);
     console.log('redis set perms', perms);
-    const jwtSign = this.getToken(user);
+
+    const pv = Number(await this.redisService.get(`admin:passwordVersion:${user.id}`)) || 1;
+    const jwtSign = this.getToken(user, pv);
 
     // token过期时间 24小时
     await this.redisService.set(`admin:token:${user.id}`, jwtSign,  60 * 60 * 24);
     await this.redisService.set(`admin:perms:${user.id}`, JSON.stringify(perms));
+    await this.redisService.set(`admin:passwordVersion:${user.id}`, pv);
+    await this.logService.saveLoginLog(user.id, ip, ua);
     return jwtSign;
   }
 
-  getToken(user: SysUser) {
+  getToken(user: SysUser, pv: number = 1) {
     return this.jwtService.sign(
       {
         uid: parseInt(user.id.toString()),
         username: user.username,
+        pv,
       },
       // {
       //   expiresIn: '1d',
       // },
     );
+  }
+
+  /**
+   * 清除登录状态信息
+   */
+  async clearLoginStatus(userId: number): Promise<void> {
+    await this.userService.forbidden(userId);
   }
 
   /**

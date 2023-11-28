@@ -45,18 +45,26 @@ export class SysLogService {
   }
   //   分页加载日志信息
   async pageGetLoginLog(page: number, count: number) {
-    const [result, total] = await this.loginLogRepository.findAndCount({
-      where: {},
-      take: count,
-      skip: (page - 1) * count,
-      order: {
-        updatedAt: 'DESC',
-      },
-    });
+    // const result = await this.loginLogRepository.find({
+    //   where: {},
+    //   take: count,
+    //   skip: (page - 1) * count,
+    //   order: {
+    //     updatedAt: 'DESC',
+    //   },
+    // });
+    // sys_login_log as login_log   sys_user as  user
+    const result = await this.loginLogRepository
+      .createQueryBuilder('login_log')
+      .innerJoinAndSelect('sys_user', 'user', 'login_log.user_id = user.id')
+      // .leftJoinAndSelect('sys_user', 'user', 'login_log.user_id = user.id')
+      .offset((page - 1) * count)
+      .limit(count)
+      .getRawMany();
+      
     const parser = new UAParser();
     return result.map((e: any) => {
-      const u = parser.setUA(e.login_log_ua).getResult();
-
+      const u = parser.setUA(e.ua).getResult();
       return {
         id: e.login_log_id,
         ip: e.login_log_ip,

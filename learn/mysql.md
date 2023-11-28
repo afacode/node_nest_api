@@ -269,3 +269,19 @@ DeleteQueryBuilder
 RelationQueryBuilder
 ```
 
+### getMany && getRawMany
+
+```js
+选择查询构建器可以获得两种类型的结果： entities 或 原始结果。 大多数时候，你需要从数据库中选择真实的实体，例如用户。 为此，你使用 getOne 和 getMany。 但有时你需要选择一些特定数据，比如所有用户照片的总和。 这些数据不是实体，它称为原始数据。 要获取原始数据，请使用 getRawOne 和 getRawMany。 例子：
+
+```
+
+### 获取生成的查询
+```js
+// 打印到控制台
+printSql()
+
+getSql()
+
+
+```

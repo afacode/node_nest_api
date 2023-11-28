@@ -1,18 +1,18 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
 import { camelCase, isEmpty } from 'lodash';
-// import {} from './user.dto'
-//   CreateUserDto,
-//   PageSearchUserDto,
-//   UpdatePasswordDto,
-//   UpdateUserDto,
-//   UpdateUserInfoDto,
 import SysUser from '@/entities/admin/sys_user.entity';
 import { EntityManager, In, Repository } from 'typeorm';
 import SysDepartment from '@/entities/admin/sys_department.entity';
 import SysUserRole from '@/entities/admin/sys_user_role.emtity';
 import { ApiException } from '@/common/exceptions/api.exception';
-import { CreateUserDto, PageSearchUserDto, UpdateUserDto } from './user.dto';
+import {
+  CreateUserDto,
+  PageSearchUserDto,
+  UpdatePasswordDto,
+  UpdateUserDto,
+  UpdateUserInfoDto,
+} from './user.dto';
 import { UtilService } from '@/shared/services/util.service';
 import { ROOT_ROLE_ID } from '../../admin.constants';
 import { PageSearchUserInfo } from './user.class';
@@ -115,6 +115,39 @@ export class SysUserService {
     return { ...user, roles, departmentName: departmentRow.name };
   }
 
+  /**
+   * 查找列表里的信息
+   */
+  async infoList(ids: number[]): Promise<SysUser[]> {
+    const users = await this.userRepository.findBy({ id: In(ids) });
+    return users;
+  }
+
+  /**
+   * 更新个人信息
+   */
+  async updatePersonInfo(uid: number, info: UpdateUserInfoDto): Promise<void> {
+    await this.userRepository.update(uid, info);
+  }
+
+  /**
+   * 更改管理员密码
+   */
+  async updatePassword(uid: number, dto: UpdatePasswordDto): Promise<void> {
+    const user = await this.userRepository.findOne({ where: { id: uid } });
+    if (isEmpty(user)) {
+      throw new ApiException(10017);
+    }
+    const comparePassword = this.util.md5(`${dto.originPassword}${user.psalt}`);
+    // 原密码不一致，不允许更改
+    if (user.password !== comparePassword) {
+      throw new ApiException(10011);
+    }
+    const password = this.util.md5(`${dto.newPassword}${user.psalt}`);
+    await this.userRepository.update({ id: uid }, { password });
+    await this.upgradePasswordV(user.id);
+  }
+
   // 根据ID列表删除用户
   async delete(userIds: number[]): Promise<void | never> {
     const rootUserId = await this.findRootUserId();
@@ -207,6 +240,30 @@ export class SysUserService {
       where: { id: this.rootRoleId },
     });
     return result.userId;
+  }
+
+  // 禁用用户
+  async forbidden(userId: number): Promise<void> {
+    await this.redisService.del(`admin:passwordVersion:${userId}`);
+    await this.redisService.del(`admin:token:${userId}`);
+    await this.redisService.del(`admin:perms:${userId}`);
+  }
+
+  // 禁用多个用户
+  async multiForbidden(userIds: number[]): Promise<void> {
+    if (userIds) {
+      const pvs: string[] = [];
+      const ts: string[] = [];
+      const ps: string[] = [];
+      userIds.forEach((e) => {
+        pvs.push(`admin:passwordVersion:${e}`);
+        ts.push(`admin:token:${e}`);
+        ps.push(`admin:perms:${e}`);
+      });
+      await this.redisService.del(pvs);
+      await this.redisService.del(ts);
+      await this.redisService.del(ps);
+    }
   }
 
   // 更新用户信息
