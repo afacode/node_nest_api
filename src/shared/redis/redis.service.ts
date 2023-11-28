@@ -6,8 +6,8 @@ export class RedisService {
   @Inject('REDIS_CLIENT')
   private redisClient: RedisClientType;
 
-  async getAllKeys() {
-    const ret = await this.redisClient.keys('*')
+  async getAllKeys(key: string = '*') {
+    const ret = await this.redisClient.keys(key)
     return ret;
   }
 
