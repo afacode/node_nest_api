@@ -42,11 +42,10 @@ export class SysMenuService {
   async getMenus(userId: number) {
     const roleIds = await this.roleService.getRoleIdsByUserId(userId);
 
-    console.log(roleIds, '有菜单', includes(roleIds, this.rootRoleId), this.rootRoleId);
     let menus: SysMenu[] = [];
     // 超管 全部返回 array, value
     if (includes(roleIds, this.rootRoleId)) {
-      menus = await this.list();
+      menus = await this.menuRepository.find();
     } else {
       // [1,2,3] roleIds
       menus = await this.menuRepository
