@@ -15,6 +15,7 @@ import { ApiExceptionFilter } from './common/filters/api-exception.filter';
 import { AdminModule } from './modules/admin/admin.module';
 import { SharedModule } from './shared/shared.module';
 import { WSModule } from './modules/ws/ws.module';
+import { BullModule } from '@nestjs/bull';
 
 // docker run -e MYSQL_ROOT_PASSWORD=123456 -p 330603306 -d mysql:8
 
@@ -84,6 +85,7 @@ import { WSModule } from './modules/ws/ws.module';
         }),
       ],
     }),
+    BullModule.forRoot({}),
     ScheduleModule.forRoot(),
     // UploadModule,
     // websocket

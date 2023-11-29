@@ -107,4 +107,26 @@ export class SysLogService {
   async countTaskLog(): Promise<number> {
     return await this.taskLogRepository.count();
   }
+
+  // 记录任务日志
+  async recordTaskLog(
+    tid: number,
+    status: number,
+    time?: number,
+    err?: string,
+  ): Promise<number> {
+    const result = await this.taskLogRepository.save({
+      taskId: tid,
+      status,
+      detail: err,
+    });
+    return result.id;
+  }
+
+  /**
+   * 清空表中的所有数据
+   */
+  async clearTaskLog(): Promise<void> {
+    await this.taskLogRepository.clear();
+  }
 }
