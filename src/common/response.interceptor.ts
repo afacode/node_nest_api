@@ -1,4 +1,4 @@
-import { CallHandler, ExecutionContext, Inject, Injectable, NestInterceptor } from '@nestjs/common';
+import { CallHandler, ExecutionContext, Inject, Injectable, NestInterceptor, Logger as NLogger } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Response, Request } from 'express';
@@ -25,10 +25,10 @@ export class ResponseInterceptor<T> implements NestInterceptor {
     const req = host.getRequest<Request>();
     const { method, url, body, params, query } = host.getRequest<Request>();
     const reqCount = ++requestSeq;
-    console.log(`${reqCount} ${method} ${url} request enter`);
+    NLogger.log(`${reqCount} ${method} ${url}进入`, '请求地址');
     return next.handle().pipe(
       map((data) => {
-        console.log(`${method} ${url} response leave ${Date.now() - startTIme}ms`);
+        NLogger.log(`${method} ${url} response leave ${Date.now() - startTIme}ms`, '请求地址耗时');
         this.logger.info('response', {
           responseData: data,
           req: getFormatRequestInfo(req),

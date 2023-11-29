@@ -3,6 +3,7 @@ import {
   ExecutionContext,
   Inject,
   Injectable,
+  Logger,
 } from '@nestjs/common';
 import { isEmpty } from 'lodash';
 import { Observable } from 'rxjs';
@@ -77,8 +78,8 @@ export class AuthGuard implements CanActivate {
     const permArray: string[] = (JSON.parse(perms) as string[]).map((e) => {
       return e.replace(/:/g, '/');
     });
-    console.log('perms[0]: ', array[0], 'permArray:', permArray[0]); // "sys:user:add"
-    console.log('path: ', path, path.replace(`/${ADMIN_PREFIX}/`, '/')); // /api/admin/sys/user/page /apisys/user/page  admin
+    Logger.log({perms: array[0], permArray: permArray[0] }, '当前用户权限');
+    Logger.log(path.replace(`/${ADMIN_PREFIX}/`, '/'), '当前PATH');// /api/admin/sys/user/page /apisys/user/page  admin
     // 遍历权限是否包含该url，不包含则无访问权限
     const replaceUrl = `/api/${ADMIN_PREFIX}/`;
     if (!permArray.includes(path.replace(`${replaceUrl}`, ''))) {

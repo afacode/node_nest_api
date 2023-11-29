@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectEntityManager } from '@nestjs/typeorm';
 
@@ -31,7 +31,7 @@ export class SysOnlineService {
       const token = socket.handshake.query?.token as string;
       return this.jwtService.verify(token).uid;
     });
-    console.log(onlineIds, 'online onlineIds');
+    Logger.log(JSON.stringify(onlineIds), '在线用户ids');
 
     return await this.findLastLoginInfoList(onlineIds, currentUid);
   }
@@ -51,7 +51,6 @@ export class SysOnlineService {
       [ids],
     );
     if (result) {
-      console.log(result, '======result====')
       const parser = new UAParser();
       return result.map((e) => {
         const u = parser.setUA(e.ua).getResult();
