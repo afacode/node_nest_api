@@ -4,13 +4,6 @@ import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { getFormatRequestInfo } from 'src/shared/utils/formatRequestInfo';
 import { Logger } from 'winston';
 
-// export function GlobalLogger(req: Request, res: Response, next: NextFunction) {
-//   if (!req.url.includes('/doc')) {
-//     console.log('url:', req.url, 'query:', req.query, 'params:', req.params, 'request ....');
-//   }
-//   next();
-// };
-
 @Injectable()
 export class LoggerMiddleware implements NestMiddleware {
   // 注入日志服务相关依赖
