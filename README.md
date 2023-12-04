@@ -50,6 +50,44 @@ $ pnpm run test:e2e
 $ pnpm run test:cov
 ```
 
+### src 目录介绍
+```
+.
+├── app.module.ts
+├── common
+│   ├── class   api返回结构
+│   ├── contants 常量
+│   ├── decorators 
+│   ├── dto
+│   ├── exceptions 业务异常处理
+│   ├── filters 异常处理
+│   ├── http.filter.ts
+│   ├── interceptors 统一处理返回接口结果
+│   ├── middleware 中间件
+│   ├── publicUrl.decorator.ts
+│   ├── response.interceptor.ts
+│   └── swagger  接口文档
+├── config   配置
+│   └── index.ts
+├── entities SQL结构映射
+│   ├── admin
+│   └── base.model.ts
+├── main.ts
+├── modules 业务模块
+│   ├── admin
+│   └── ws
+├── plugins
+│   ├── core
+│   └── upload
+├── shared  共享模块
+│   ├── redis
+│   ├── services
+│   ├── shared.module.ts
+│   └── utils
+└── templates  模版
+    └── email
+```
+
 `0440051410444`
 
 request -> middleware -> guard -> RequestInterceptor -> pipe ->  handler -> ResponseInterceptor -> filter -> response
