@@ -182,6 +182,17 @@ process.send('我是子进程发送的消息')
 
 ```
 
+## FFmpeg
+
+[FFmpeg](https://ffmpeg.org/)
+
+```js
+brew install ffmpeg
+
+
+
+```
+
 
 
 
