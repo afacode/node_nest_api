@@ -118,12 +118,69 @@ process.on('exit', (code) => {
 process.env
 
 
+```
 
+## child_process
+
+[child_process](https://nodejs.cn/api/child_process.html)
+
+```js
+// exec 超出200KB报错
+// 执行shell命令
+exec('node -v', (err, stdout, stderr) => {
+    if (err) {
+        return err
+    }
+    console.log(stdout.toString())
+})
+
+const nodeVersion = execSync('node -v')
+
+// 软件进行交互
+execSync('start chrome https://www.baidu.com')
+
+// spawn 无字节上限，返回数据时流，实时返回
+//  第二个时命令行 参数
+const ls = spawn('ls', ['-lh', '/usr']);
+
+ls.stdout.on('data', (data) => {
+  console.log(`stdout: ${data}`);
+});
+
+ls.stderr.on('data', (data) => {
+  console.error(`stderr: ${data}`);
+});
+
+ls.on('close', (code) => {
+  console.log(`child process exited with code ${code}`);
+}); 
+
+// 要运行的可执行文件的名称或路径
+// 执行顺序 exec -> execFile -> spawn
+execFile('demo.js', null, () => {})
+
+// fork 创建子进程 
+// 通过 IPC 通讯， IPC基于libuv实现
+const childProcess = fork('./child.js')
+
+childProcess.send('我是主进城发送的消息')
+
+childProcess.on('message', (msg) => {
+    console.log('主进程收到消息:', msg)
+})
+
+// child.js
+process.on('message', (msg) => {
+    console.log('收到消息:', msg)
+})
+
+process.send('我是子进程发送的消息')
+
+// 主进程收到消息: 我是子进程发送的消息
+// 收到消息: 我是主进城发送的消息
 
 
 ```
-
-
 
 
 
