@@ -77,6 +77,56 @@ os.networkInterfaces(); // 返回包含已分配网络地址的网络接口的�
 
 ```
 
+## process
+
+[process](https://nodejs.cn/api/process.html)
+
+```js
+node index.js afa=12 aa=222
+
+process.argv
+[
+  '/Users/afacode/.nvm/versions/node/v18.18.0/bin/node',
+  '/Users/afacode/node_nest_api/learn/node.demo/index.js',
+  'afa=12',
+  'aa=222'
+]
+
+// ESM 模式下永不了__dirname
+process.cwd() === __dirname
+
+// 返回描述 Node.js 进程的内存使用量（以字节为单位）的对象
+process.memoryUsage()
+
+{
+  rss: 33710080,
+  heapTotal: 6168576,
+  heapUsed: 5428848,
+  external: 427258,
+  arrayBuffers: 17678
+}
+
+// pid 
+process.kill(process.pid)
+
+process.exit()
+process.on('exit', (code) => {
+  console.log(`About to exit with code: ${code}`);
+});
+
+// 返回包含用户环境的对象 所有， 修改只会在当前进程生效不会修改系统环境
+process.env
+
+
+
+
+
+```
+
+
+
+
+
 
 
 ## bilibili download
