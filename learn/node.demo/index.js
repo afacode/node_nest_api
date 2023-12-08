@@ -2,6 +2,8 @@ const os = require('node:os');
 const process = require('node:process');
 const { exec, execSync, spawn, spawnSync, execFile, execFileSync, fork } = require('node:child_process');
 
+
+
 // console.log(os.hostname())
 // console.log(os.homedir())
 // console.log(os.arch())
@@ -52,10 +54,34 @@ const { exec, execSync, spawn, spawnSync, execFile, execFileSync, fork } = requi
 // }); 
 
 
-const childProcess = fork('./child.js')
+// const childProcess = fork('./child.js')
 
-childProcess.send('我是主进城发送的消息')
+// childProcess.send('我是主进城发送的消息')
 
-childProcess.on('message', (msg) => {
-    console.log('主进程收到消息:', msg)
-})
+// childProcess.on('message', (msg) => {
+//     console.log('主进程收到消息:', msg)
+// })
+
+// 发布订阅模式
+// const EventEmitter = require('node:events')
+// const bus = new EventEmitter()
+// // 默认监听10个
+// bus.setMaxListeners(20)
+
+// bus.emit('count', 10)
+
+// bus.on('count', (msg) => {
+//     console.log(msg)
+// })
+// bus.on('count', (msg) => {
+//     console.log(msg)
+// })
+// bus.on('count', (msg) => {
+//     console.log(msg)
+// })
+// bus.on('count', (msg) => {
+//     console.log(msg)
+// })
+// bus.off('count')
+
+// bus.once('count', () => {})
