@@ -127,7 +127,7 @@ process.env
 
 [events](https://nodejs.cn/api/events.html)
 
-```
+```js
 // 发布订阅模式
 const EventEmitter = require('node:events')
 const bus = new EventEmitter()
@@ -153,7 +153,23 @@ bus.off('count')
 bus.once('count', () => {})
 ```
 
+## util
 
+[util](https://nodejs.cn/api/util.html)
+
+```js
+
+```
+
+
+
+## pngquant
+
+```js
+
+
+
+```
 
 
 
