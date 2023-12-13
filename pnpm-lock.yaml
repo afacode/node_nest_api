@@ -29,6 +29,7 @@ specifiers:
   '@typescript-eslint/eslint-plugin': ^6.0.0
   '@typescript-eslint/parser': ^6.0.0
   axios: ^1.6.2
+  base62: ^2.0.1
   bcrypt: ^5.1.1
   bull: ^4.11.5
   class-transformer: ^0.5.1
@@ -85,6 +86,7 @@ dependencies:
   '@nestjs/websockets': 10.2.7_njy66ddqhkuvckl4ay7yfggula
   '@types/bcrypt': 5.0.1
   axios: 1.6.2
+  base62: 2.0.1
   bcrypt: 5.1.1
   bull: 4.11.5
   class-transformer: 0.5.1
@@ -2241,6 +2243,11 @@ packages:
 
   /balanced-match/1.0.2:
     resolution: {integrity: sha512-3oSeUO0TMV67hN1AmbXsK4yaqU7tjiHlbxRDZOpH0KW9+CeX4bRAaX0Anxt0tx2MrpRpWwQaPwIlISEJhYU5Pw==}
+
+  /base62/2.0.1:
+    resolution: {integrity: sha512-4t4WQK7mdbcWzqEBiq6tfo2qDCeIZGXvjifJZyxHIVcjQkZJxpFtu/pa2Va69OouCkg6izZ08hKnPxroeDyzew==}
+    engines: {node: '>=6.0.0'}
+    dev: false
 
   /base64-js/1.5.1:
     resolution: {integrity: sha512-AKpaYlHn8t4SVbOHCy+b5+KKgvR4vrsD8vbvrbiQJps7fKDTkjkDry6ji0rUJjC0kzbNePLwzxq8iypo41qeWA==}

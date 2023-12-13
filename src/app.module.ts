@@ -16,6 +16,7 @@ import { AdminModule } from './modules/admin/admin.module';
 import { SharedModule } from './shared/shared.module';
 import { WSModule } from './modules/ws/ws.module';
 import { BullModule } from '@nestjs/bull';
+import { GeneralModule } from './modules/general/general.module';
 
 // docker run -e MYSQL_ROOT_PASSWORD=123456 -p 330603306 -d mysql:8
 
@@ -94,6 +95,7 @@ import { BullModule } from '@nestjs/bull';
     // custom module
     SharedModule,
     AdminModule,
+    GeneralModule,
   ],
   controllers: [],
   providers: [
