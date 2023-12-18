@@ -268,3 +268,19 @@ fs.symlinkSync('./write.txt', './write3.txt')
 
 ## bilibili download
 [bilibili](https://github.com/Youky1/bilibili-save-nodejs.git)
+
+## nestjs email 发送
+
+[nest-modules/mailer](https://github.com/nest-modules/mailer)
+
+## typeorm
+
+### 使用Exclude()来隐藏数据
+
+```js
+@Exclude()
+password: string;
+```
+
+
+

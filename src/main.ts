@@ -18,6 +18,7 @@ async function bootstrap() {
     prefix: '/public',
   });
 
+  // app.setGlobalPrefix('/api/v1')
   app.setGlobalPrefix('api');
 
   // cors
