@@ -1,8 +1,8 @@
-import { Body, Controller, Headers, Get, Post, Req, Query, Redirect, Param, BadRequestException } from '@nestjs/common';
+import { Body, Controller, Headers, Get, Post, Req, Query, Redirect, Param, BadRequestException, Res } from '@nestjs/common';
 import { ApiOkResponse, ApiOperation, ApiSecurity, ApiTags } from '@nestjs/swagger';
 import { ShortUrlService } from './shortUrl.service';
 import { Authorize } from '@/modules/admin/adminCore/decorators/authorize.decorator';
-
+import {Response} from 'express';
 @ApiTags('短链接')
 @Controller('url')
 export class ShortUrlController {
@@ -10,17 +10,18 @@ export class ShortUrlController {
     
   @ApiOperation({ summary: '短连接访问' })
   @Get(':code')
-  // @Redirect()
+  // @Redirect('https://juejin.cn/post/6917820554334437384#heading-8', 302)
   @Authorize()
-  async jump(@Param('code') code: string) {
+  async jump(@Param('code') code: string, @Res() res: Response) {
     const longUrl = await this.shortUrlService.getLongUrl(code);
     if(!longUrl) {
         throw new BadRequestException('短链不存在');
       }
-      return {
-        url: longUrl,
-        statusCode: 302
-      } 
+      res.redirect(longUrl, 302)
+      // return {
+      //   url: longUrl,
+      //   statusCode: 302
+      // } 
   }
 
   @ApiOperation({
