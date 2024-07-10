@@ -21,7 +21,7 @@ export const getConfiguration = () => ({
       migrations: ['dist/src/migrations/**/*.js'],
       autoLoadEntities: true,
       /** https://typeorm.io/migrations */
-      synchronize: true,
+      synchronize: true, // 生产环境 关闭
       logging: ['error'],
       maxQueryExecutionTime: 1000, // 记录长时间运行的查询
       timezone: '+08:00', // 东八区

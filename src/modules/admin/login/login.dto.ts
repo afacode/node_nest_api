@@ -27,6 +27,9 @@ export class LoginInfoDto {
 export class LoginToken {
   @ApiProperty({ description: 'JWT身份Token' })
   token: string;
+	
+	@ApiProperty({ description: 'JWT身份refresh_token' })
+  refresh_token: string;
 }
 
 export class ImageCaptchaDto {

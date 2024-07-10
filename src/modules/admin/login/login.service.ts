@@ -13,135 +13,152 @@ import { SysLogService } from '../system/log/log.service';
 
 @Injectable()
 export class LoginService {
-  constructor(
-    private redisService: RedisService,
+	constructor(
+		private redisService : RedisService,
 
-    private userService: SysUserService,
-    private menuService: SysMenuService,
-    private util: UtilService,
-    private jwtService: JwtService,
-    private logService: SysLogService,
-  ) {}
+		private userService : SysUserService,
+		private menuService : SysMenuService,
+		private util : UtilService,
+		private jwtService : JwtService,
+		private logService : SysLogService,
+	) { }
 
-  // redis connect test
-  async redisTest() {
-    return await this.redisService.getAllKeys();
-  }
+	// redis connect test
+	async redisTest() {
+		return await this.redisService.getAllKeys();
+	}
 
-  /**
-   * 创建验证码并缓存加入redis缓存
-   * @param captcha 验证码长宽
-   * @returns svg & id obj
-   */
-  async createImageCaptcha(captcha: ImageCaptchaDto) {
-    const svg = svgCaptcha.create({
-      size: 4,
-      color: true,
-      noise: 4,
-      width: isEmpty(captcha.width) ? 100 : captcha.width,
-      height: isEmpty(captcha.height) ? 50 : captcha.height,
-      charPreset: '1234567890',
-    });
-    const result = {
-      img: `data:image/svg+xml;base64,${Buffer.from(svg.data).toString(
-        'base64',
-      )}`,
-      id: this.util.generateUUID(),
-    };
+	/**
+	 * 创建验证码并缓存加入redis缓存
+	 * @param captcha 验证码长宽
+	 * @returns svg & id obj
+	 */
+	async createImageCaptcha(captcha : ImageCaptchaDto) {
+		const svg = svgCaptcha.create({
+			size: 4,
+			color: true,
+			noise: 4,
+			width: isEmpty(captcha.width) ? 100 : captcha.width,
+			height: isEmpty(captcha.height) ? 50 : captcha.height,
+			charPreset: '1234567890',
+		});
+		const result = {
+			img: `data:image/svg+xml;base64,${Buffer.from(svg.data).toString(
+				'base64',
+			)}`,
+			id: this.util.generateUUID(),
+		};
 
-    // 5分钟过期时间
-    await this.redisService.set(`admin:captcha:img:${result.id}`, svg.text, 60 * 5);
-    
-    return result
-  }
+		// 5分钟过期时间
+		await this.redisService.set(`admin:captcha:img:${result.id}`, svg.text, 60 * 5);
 
-  /**
-   * 校验验证码
-   */
-  async checkImgCaptcha(id: string, code: string) {
-    const getCode = await this.redisService.get(`admin:captcha:img:${id}`);
-    if (isEmpty(getCode) || code.toLowerCase() !== getCode.toLowerCase()) {
-      throw new ApiException(10002);
-    }
-    // 校验成功后移除验证码
-    await this.redisService.del(`admin:captcha:img:${id}`);
-  }
+		return result
+	}
 
-  /**
-   * 获取登录JWT
-   * 返回null则账号密码有误，不存在该用户
-   */
+	/**
+	 * 校验验证码
+	 */
+	async checkImgCaptcha(id : string, code : string) {
+		const getCode = await this.redisService.get(`admin:captcha:img:${id}`);
+		if (isEmpty(getCode) || code.toLowerCase() !== getCode.toLowerCase()) {
+			throw new ApiException(10002);
+		}
+		// 校验成功后移除验证码
+		await this.redisService.del(`admin:captcha:img:${id}`);
+	}
 
-  async getLoginSign(
-    username: string,
-    password: string,
-    ip: string,
-    ua: string,
-  ) {
-    const user: SysUser = await this.userService.findUserByUserName(username);
-    if (isEmpty(user)) {
-      throw new ApiException(10003);
-    }
+	/**
+	 * 获取登录JWT
+	 * 返回null则账号密码有误，不存在该用户
+	 */
 
-    // 密码比对
-    const comparePassword = this.util.md5(`${password}${user.psalt}`)
-    if (user.password !== comparePassword) {
-      throw new ApiException(10003);
-    }
+	async getLoginSign(
+		username : string,
+		password : string,
+		ip : string,
+		ua : string,
+	) {
+		const user : SysUser = await this.userService.findUserByUserName(username);
+		if (isEmpty(user)) {
+			throw new ApiException(10003);
+		}
 
-    const perms = await this.menuService.getPerms(user.id);
-    console.log('redis set perms', perms);
+		// 密码比对
+		const comparePassword = this.util.md5(`${password}${user.psalt}`)
+		if (user.password !== comparePassword) {
+			throw new ApiException(10003);
+		}
 
-    const pv = Number(await this.redisService.get(`admin:passwordVersion:${user.id}`)) || 1;
-    const jwtSign = this.getToken(user, pv);
+		const perms = await this.menuService.getPerms(user.id);
+		console.log('redis set perms', perms);
 
-    // token过期时间 24小时
-    await this.redisService.set(`admin:token:${user.id}`, jwtSign,  60 * 60 * 24);
-    await this.redisService.set(`admin:perms:${user.id}`, JSON.stringify(perms));
-    await this.redisService.set(`admin:passwordVersion:${user.id}`, pv);
-    await this.logService.saveLoginLog(user.id, ip, ua);
-    return jwtSign;
-  }
+		const pv = Number(await this.redisService.get(`admin:passwordVersion:${user.id}`)) || 1;
+		const jwtSign = this.getToken(user, pv);
 
-  getToken(user: SysUser, pv: number = 1) {
-    return this.jwtService.sign(
-      {
-        uid: parseInt(user.id.toString()),
-        username: user.username,
-        pv,
-      },
-      // {
-      //   expiresIn: '1d',
-      // },
-    );
-  }
+		// token过期时间 24小时
+		await this.redisService.set(`admin:token:${user.id}`, jwtSign, 60 * 60 * 24);
+		await this.redisService.set(`admin:perms:${user.id}`, JSON.stringify(perms));
+		await this.redisService.set(`admin:passwordVersion:${user.id}`, pv);
+		await this.logService.saveLoginLog(user.id, ip, ua);
+		return jwtSign;
+	}
 
-  /**
-   * 清除登录状态信息
-   */
-  async clearLoginStatus(userId: number): Promise<void> {
-    await this.userService.forbidden(userId);
-  }
+	getToken(user : SysUser, pv : number = 1) {
+		const access_token = this.jwtService.sign(
+			{
+				uid: parseInt(user.id.toString()),
+				username: user.username,
+				pv,
+			});
+		const refresh_token = this.jwtService.sign(
+			{
+				uid: parseInt(user.id.toString()),
+			},
+			{
+				expiresIn: '30d',
+			}
+		);
+		return { token: access_token, refresh_token };
+	}
 
-  /**
-   * 获取权限菜单
-   */
-  async getPermMenu(userId: number) {
-    const menus = await this.menuService.getMenus(userId);
-    const perms = await this.menuService.getPerms(userId);
-    return { menus, perms };
-  }
+	/**
+	 * 清除登录状态信息
+	 */
+	async clearLoginStatus(userId : number) : Promise<void> {
+		await this.userService.forbidden(userId);
+	}
 
-  async getRedisPasswordVersionById(id: number): Promise<string> {
-    return this.redisService.get(`admin:passwordVersion:${id}`);
-  }
+	async getUserByUid(token : string) {
+		const tokenData = await this.jwtService.verifyAsync(token);
+		const user = await this.userService.getAccountInfo(tokenData.uid);
+		return {
+			name: user.name,
+			nickName: user.nickName,
+			email: user.email,
+			phone: user.phone,
+			remark: user.remark,
+			headImg: user.headImg,
+		};
+	}
+	/**
+	 * 获取权限菜单
+	 */
+	async getPermMenu(userId : number) {
+		const menus = await this.menuService.getMenus(userId);
+		const perms = await this.menuService.getPerms(userId);
+		return { menus, perms };
+	}
 
-  async getRedisTokenById(id: number): Promise<string> {
-    return this.redisService.get(`admin:token:${id}`);
-  }
+	async getRedisPasswordVersionById(id : number) : Promise<string> {
+		return this.redisService.get(`admin:passwordVersion:${id}`);
+	}
 
-  async getRedisPermsById(id: number) {
-    const perms = await this.redisService.get(`admin:perms:${id}`);
-    return perms
-  }
+	async getRedisTokenById(id : number) : Promise<string> {
+		return this.redisService.get(`admin:token:${id}`);
+	}
+
+	async getRedisPermsById(id : number) {
+		const perms = await this.redisService.get(`admin:perms:${id}`);
+		return perms
+	}
 }

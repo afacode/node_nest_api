@@ -50,6 +50,13 @@ $ pnpm run test:e2e
 $ pnpm run test:cov
 ```
 
+## 部署
+```shell
+docker-compose up
+
+```
+
+
 ### src 目录介绍
 ```
 .

@@ -1,0 +1,38 @@
+version: '3'
+
+services:
+  nest-app:
+    build:
+      context: ./
+      dockerfile: ./Dockerfile
+    # 当前服务启动之前先要把depends_on指定的服务启动起来才行
+    depends_on:
+      - mysql-container
+      - redis-container
+    ports:
+      - '3000:3000'
+
+  mysql:
+    image: mysql:latest
+    container_name: mysql-container
+    restart: always
+    env_file:
+      - .env
+      - .env.production
+    ports:
+      - '3306:3306'
+    command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_general_ci #设置utf8字符集
+    volumes:
+      - /Users/afacode/code/docker_volume_data/mysql-data:/var/lib/mysql
+    environment:
+      MYSQL_DATABASE: nest-admin
+      MYSQL_ROOT_PASSWORD: root
+
+  redis:
+    image: redis:alpine
+    container_name: redis-container
+    restart: always
+    ports:
+      - '6379:6379'
+    volumes:
+      - /Users/afacode/code/docker_volume_data/redis-data:/data
