@@ -4,7 +4,6 @@
 	"description": "nest rest api",
 	"author": "afacode",
 	"private": true,
-	"type": "module",
 	"license": "UNLICENSED",
 	"scripts": {
 		"build": "cross-env RUN_ENV=prod nest build",

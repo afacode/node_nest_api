@@ -7,7 +7,7 @@ export class RedisService {
   private redisClient: RedisClientType;
 
   async getAllKeys(key: string = '*') {
-    const ret = await this.redisClient.keys(key)
+    const ret = await this.redisClient.keys(key);
     return ret;
   }
 
@@ -22,6 +22,19 @@ export class RedisService {
   async set(key: string, value: string | number, ttl?: number) {
     await this.redisClient.set(key, value);
 
+    if (ttl) {
+      await this.redisClient.expire(key, ttl);
+    }
+  }
+
+  async hashGet(key: string) {
+    return await this.redisClient.hGetAll(key);
+  }
+  
+  async hashSet(key: string, obj: Record<string, any>, ttl?: number) {
+    for (let name in obj) {
+      await this.redisClient.hSet(key, name, obj[name]);
+    }
     if (ttl) {
       await this.redisClient.expire(key, ttl);
     }

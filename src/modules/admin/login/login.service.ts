@@ -96,7 +96,7 @@ export class LoginService {
 		const jwtSign = this.getToken(user, pv);
 
 		// token过期时间 24小时
-		await this.redisService.set(`admin:token:${user.id}`, jwtSign, 60 * 60 * 24);
+		await this.redisService.set(`admin:token:${user.id}`, jwtSign.token, 60 * 60 * 24);
 		await this.redisService.set(`admin:perms:${user.id}`, JSON.stringify(perms));
 		await this.redisService.set(`admin:passwordVersion:${user.id}`, pv);
 		await this.logService.saveLoginLog(user.id, ip, ua);

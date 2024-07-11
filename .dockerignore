@@ -1,0 +1,14 @@
+# compiled output
+/dist
+/node_modules
+/files
+/pubilc
+
+# Logs
+logs
+*.log
+*.md
+.git/
+.DS_Store
+.vscode/
+.dockerignore

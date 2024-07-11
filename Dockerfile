@@ -1,3 +1,4 @@
+# 使用 as 来为某一阶段命名
 FROM node:lts-alpine as builder
 
 # 设置环境
@@ -5,6 +6,7 @@ ENV PROJECT_DIR=/node_nest_api \
     SERVER_PORT=3000 \
     SOCKET_PORT=3001
 
+# cd 到 /node_nest_api
 WORKDIR $PROJECT_DIR
 
 # set timezone

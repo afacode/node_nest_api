@@ -9,6 +9,11 @@ services:
     depends_on:
       - mysql-container
       - redis-container
+    container_name: nest-app
+    restart: always
+    # 多个容器使用桥接网络通信
+    networks:
+      - nest_app_network
     ports:
       - '3000:3000'
 
@@ -16,6 +21,8 @@ services:
     image: mysql:latest
     container_name: mysql-container
     restart: always
+    networks:
+      - nest_app_network
     env_file:
       - .env
       - .env.production
@@ -32,6 +39,8 @@ services:
     image: redis:alpine
     container_name: redis-container
     restart: always
+    networks:
+      - nest_app_network
     ports:
       - '6379:6379'
     volumes:

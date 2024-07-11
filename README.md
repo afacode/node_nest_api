@@ -52,8 +52,13 @@ $ pnpm run test:cov
 
 ## 部署
 ```shell
+## 部署容器
 docker-compose up
 
+## 删除所有容器
+docker-compose down --rmi all
+
+# 单独跑 Docker 容器，还是可以结合 pm2-runtime 来提高重启速度
 ```
 
 
