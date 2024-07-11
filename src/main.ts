@@ -7,6 +7,7 @@ import { HttpStatus, Logger, UnprocessableEntityException, ValidationPipe } from
 import { ConfigService } from '@nestjs/config';
 import { setupSwagger } from './common/swagger';
 import { ValidationError } from 'class-validator';
+import { mw as requestIpMw } from 'request-ip';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
@@ -24,6 +25,9 @@ async function bootstrap() {
   // cors
   // app.use(cors());
   app.enableCors();
+  // 获取真实 ip
+
+  app.use(requestIpMw({ attributeName: 'ip' }));
 
   // 全局pipe validate
   app.useGlobalPipes(

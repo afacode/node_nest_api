@@ -59,6 +59,9 @@ docker-compose up
 docker-compose down --rmi all
 
 # 单独跑 Docker 容器，还是可以结合 pm2-runtime 来提高重启速度
+
+
+docker run -p 9000:9000 -p 9090:9090      --net=host      --name local-oss      -d --restart=always      -e "MINIO_ACCESS_KEY=afacodeadmin"      -e "MINIO_SECRET_KEY=afacodeadmin"      -v /Users/afacode/code/docker_volume_data//local_oss/data:/data      -v /Users/afacode/code/docker_volume_data/local_oss/config:/root/.minio      minio/minio server   /data --console-address ":9090" -address ":9000"
 ```
 
 
