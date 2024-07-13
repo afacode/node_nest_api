@@ -43,6 +43,32 @@
       "compilerOptions": {
         "tsConfigPath": "apps/gprc_test/tsconfig.app.json"
       }
+    },
+    "grpc_server": {
+      "type": "application",
+      "root": "apps/grpc_server",
+      "entryFile": "main",
+      "sourceRoot": "apps/grpc_server/src",
+      "compilerOptions": {
+        "assets": [
+          "**/*.proto"
+        ],
+        "watchAssets": true,
+        "tsConfigPath": "apps/grpc_server/tsconfig.app.json"
+      }
+    },
+    "grpc_client": {
+      "type": "application",
+      "root": "apps/grpc_client",
+      "entryFile": "main",
+      "sourceRoot": "apps/grpc_client/src",
+      "compilerOptions": {
+        "assets": [
+          "**/*.proto"
+        ],
+        "watchAssets": true,
+        "tsConfigPath": "apps/grpc_client/tsconfig.app.json"
+      }
     }
   }
 }
