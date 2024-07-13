@@ -17,11 +17,20 @@
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
-    "paths": { /*定义别名*/
+    "paths": {
+      "@app/lib_base": [
+        "libs/lib_base/src"
+      ],
+      "@app/lib_base/*": [
+        "libs/lib_base/src/*"
+      ],
       "@/*": [
-        "src/*"
+        "apps/node_nest_api/src/*"
+      ],
+      "src/*": [
+        "apps/node_nest_api/src/*"
       ]
-    },
+    }
   },
   "exclude": [
     "node_modules",

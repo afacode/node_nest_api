@@ -1,13 +1,48 @@
 {
   "$schema": "https://json.schemastore.org/nest-cli",
   "collection": "@nestjs/schematics",
-  "sourceRoot": "src",
+  "sourceRoot": "apps/node_nest_api/src",
   "compilerOptions": {
     "deleteOutDir": true,
-    "assets": ["templates/**/*"],
-    "watchAssets": true
+    "assets": [
+      "templates/**/*"
+    ],
+    "watchAssets": true,
+    "webpack": true,
+    "tsConfigPath": "apps/node_nest_api/tsconfig.app.json"
   },
-  "generateOptions": { 
-    "spec": false 
- }
+  "generateOptions": {
+    "spec": false
+  },
+  "monorepo": true,
+  "root": "apps/node_nest_api",
+  "projects": {
+    "node_nest_api": {
+      "type": "application",
+      "root": "apps/node_nest_api",
+      "entryFile": "main",
+      "sourceRoot": "apps/node_nest_api/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/node_nest_api/tsconfig.app.json"
+      }
+    },
+    "lib_base": {
+      "type": "library",
+      "root": "libs/lib_base",
+      "entryFile": "index",
+      "sourceRoot": "libs/lib_base/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/lib_base/tsconfig.lib.json"
+      }
+    },
+    "gprc_test": {
+      "type": "application",
+      "root": "apps/gprc_test",
+      "entryFile": "main",
+      "sourceRoot": "apps/gprc_test/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/gprc_test/tsconfig.app.json"
+      }
+    }
+  }
 }

@@ -13,8 +13,6 @@
 默认knife地址
 `/doc.html`
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
-
 ## 安装
 
 ```bash
@@ -35,6 +33,16 @@ $ pnpm run start:dev
 
 # production mode
 $ pnpm run start:prod
+
+# 启动 gprc
+$ pnpm run start gprc_test
+gprc_test 项目端口：3002
+```
+
+## monorepo
+```shell
+nest g app morepo_demo
+nest g lib libdemo
 ```
 
 ## 测试

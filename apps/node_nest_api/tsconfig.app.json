@@ -1,0 +1,14 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "declaration": false,
+    "outDir": "../../dist/apps/node_nest_api"
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist", "test", "**/*spec.ts"],
+  "paths": { /*定义别名*/
+      // "@/*": [
+      //   "apps/node_nest_api/src/*"
+      // ]
+    }
+}
